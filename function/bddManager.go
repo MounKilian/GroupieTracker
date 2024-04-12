@@ -70,3 +70,27 @@ func resetUserTable(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+
+func createNewRoom(db *sql.DB, value [4]string) {
+	insertQuery := "INSERT INTO ROOMS (id, created_by, max_player, name, id_game) VALUES (?, ?, ?, ?, ?)"
+	_, err := db.Exec(insertQuery, nil, value[0], value[1], value[2], value[3])
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func addPlayer(db *sql.DB, value [2]int) {
+	insertQuery := "INSERT INTO ROOMS (id_room, id_user, score) VALUES (?, ?, ?)"
+	_, err := db.Exec(insertQuery, value[0], value[1], 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func updatePlayerScore(db *sql.DB, id_room int, score User) {
+	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ?"
+	_, err := db.Exec(insertQuery, score, id_room)
+	if err != nil {
+		log.Fatal(err)
+	}
+}

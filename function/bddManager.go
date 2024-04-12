@@ -1,4 +1,4 @@
-package gourpieTracker
+package groupieTracker
 
 import (
 	"database/sql"

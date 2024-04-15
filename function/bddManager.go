@@ -95,7 +95,7 @@ func addPlayer(db *sql.DB, value [2]int) {
 	if checkNbPlayer(db, value[0]) > getMaxPlayer(db, value[0]) {
 		log.Println("Party already full")
 	} else {
-		insertQuery := "INSERT INTO ROOMS (id_room, id_user, score) VALUES (?, ?, ?)"
+		insertQuery := "INSERT INTO ROOM_USERS (id_room, id_user, score) VALUES (?, ?, ?)"
 		_, err := db.Exec(insertQuery, value[0], value[1], 0)
 		if err != nil {
 			log.Fatal(err)
@@ -113,7 +113,7 @@ func updatePlayerScore(db *sql.DB, id_room int, score User) {
 
 func checkNbPlayer(db *sql.DB, id_room int) int {
 	var nbPLayer int
-	query := "SELECT COUNT(*) FROM ROOM_USERS WHERE id = ?"
+	query := "SELECT COUNT(*) FROM ROOM_USERS WHERE id_room = ?"
 	err := db.QueryRow(query, id_room).Scan(&nbPLayer)
 	if err != nil {
 		log.Fatal(err)
@@ -135,10 +135,15 @@ func getMaxPlayer(db *sql.DB, id_room int) int {
 func getRoomFromUser(db *sql.DB, id_user int) int {
 	var idRoom int
 
-	query := "SELECT `id` FROM ROOMS WHERE created_by = ?"
+	query := "SELECT id FROM ROOMS WHERE created_by = ?"
 	err := db.QueryRow(query, id_user).Scan(&idRoom)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return idRoom
+}
+
+func CreateRoomTest(db *sql.DB) {
+	value := [4]string{"2", "4", "zfzef", "1"}
+	createNewRoom(db, value)
 }

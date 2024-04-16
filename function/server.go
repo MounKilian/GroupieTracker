@@ -9,7 +9,8 @@ func Server() {
 	var currentUser User
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		Home(w, r)
+		errorMessage := Error{}
+		Home(w, r, errorMessage)
 	})
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		currentUser = Formulaire(w, r)

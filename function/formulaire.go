@@ -9,6 +9,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type Error struct {
+	errorMessage string
+}
+
 func Formulaire(w http.ResponseWriter, r *http.Request) User {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
@@ -31,7 +35,6 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 
 			if verifyPassword != password && VerifyPassword(password) {
 				log.Println("ERROR : Incorrect password")
-				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 			} else {
 				createUser(db, valueCreate)
 				valueConnect := [2]string{pseudo, passwordEncrypt}
@@ -51,7 +54,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 
 			user = connectUser(db, valueConnect)
 			if user.pseudo == "" {
-				log.Println("ERROR : Wrong connection information")
+				log.Println("ERROR : Wrong pseudo")
 			} else {
 				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 				return user

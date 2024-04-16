@@ -18,6 +18,9 @@
                 <form method="post" action="/checkUser">
                     <button name="signin" type="signin">Singin</button>
                 </form>
+                {{ if .errorMessage }}
+                <p>{{ .errorMessage }}</p>
+                {{end}}
             </div>
         </div>
 </html>

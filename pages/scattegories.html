@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>test</title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        {{ . }}
+        <div class="table-conteneur">
+            <table id="heroes-table" class="table-scrollable">
+                <thead >
+                    <tr>
+                        <th>Artist</th>
+                        <th>Album</th>
+                        <th>Groupe de music</th>
+                        <th>Instrument de music</th>
+                        <th>Featuring</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <form id="scattegories" method="post" action="/scattegoriesChecker">
+                            <td><input name="artist" placeholder="Artist" required></input></td>
+                            <td><input name="album" placeholder="Album" required></input></td>
+                            <td><input name="groupe-de-music" placeholder="Groupe de music" required></input></td>
+                            <td><input name="instrument-de-music" placeholder="Instrument de music" required></input></td>
+                            <td><input name="featuring" placeholder="Featuring" required></input></td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" form="scattegories" value="Submit">SUbmit</button>
+        </div>
+    </body>
+</html>

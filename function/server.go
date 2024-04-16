@@ -7,6 +7,7 @@ import (
 
 func Server() {
 	var currentUser User
+	var letter string
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		Home(w, r)
@@ -14,6 +15,14 @@ func Server() {
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		currentUser = Formulaire(w, r)
 		fmt.Println(currentUser)
+	})
+	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
+		letter = selectRandomLetter()
+		Scattegories(w, r, letter)
+	})
+	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
+		response := ScattegoriesForm(w, r, letter)
+		fmt.Println(response)
 	})
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))

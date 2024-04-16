@@ -2,12 +2,31 @@ package groupieTracker
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
-	"unicode"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+func ScattegoriesForm(w http.ResponseWriter, r *http.Request, letter string) []string {
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
+
+	var response []string
+	for key := range r.Form {
+		fmt.Println(letter, r.FormValue(key))
+		fmt.Println(strings.ToLower(r.FormValue(key))[0], strings.ToLower(letter)[0])
+		if strings.ToLower(r.FormValue(key))[0] == strings.ToLower(letter)[0] {
+			response = append(response, r.FormValue(key))
+		}
+	}
+
+	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
+	return response
+}
 
 func Formulaire(w http.ResponseWriter, r *http.Request) User {
 	db, err := sql.Open("sqlite3", "BDD.db")
@@ -61,23 +80,4 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 
 	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 	return user
-}
-
-func VerifyPassword(s string) bool {
-	var hasNumber, hasUpperCase, hasLowercase, hasSpecial bool
-	for _, c := range s {
-		switch {
-		case unicode.IsNumber(c):
-			hasNumber = true
-		case unicode.IsUpper(c):
-			hasUpperCase = true
-		case unicode.IsLower(c):
-			hasLowercase = true
-		case c == '#' || c == '|':
-			return false
-		case unicode.IsPunct(c) || unicode.IsSymbol(c):
-			hasSpecial = true
-		}
-	}
-	return hasNumber && hasUpperCase && hasLowercase && hasSpecial
 }

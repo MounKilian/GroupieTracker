@@ -13,3 +13,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	}
 	template.Execute(w, nil)
 }
+
+func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
+	template, err := template.ParseFiles("./pages/scattegories.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, letter)
+}

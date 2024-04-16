@@ -13,9 +13,7 @@ func Server() {
 	go room.Start()
 	var currentUser User
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		Home(w, r)
-	})
+	http.HandleFunc("/", Home)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		currentUser = Formulaire(w, r)
 		fmt.Println(currentUser)
@@ -42,7 +40,6 @@ var upgrader = websocket.Upgrader{
 
 func NewRoom() *Room {
 	return &Room{
-		id:         "edi",
 		clients:    make(map[*websocket.Conn]bool),
 		register:   make(chan *websocket.Conn),
 		unregister: make(chan *websocket.Conn),
@@ -50,16 +47,14 @@ func NewRoom() *Room {
 }
 
 func (room *Room) Start() {
-	if room.id == "edi" {
-		for {
-			select {
-			case conn := <-room.register:
-				room.clients[conn] = true
-				log.Println("Client connected")
-			case conn := <-room.unregister:
-				delete(room.clients, conn)
-				log.Println("Client disconnected")
-			}
+	for {
+		select {
+		case conn := <-room.register:
+			room.clients[conn] = true
+			log.Println("Client connected")
+		case conn := <-room.unregister:
+			delete(room.clients, conn)
+			log.Println("Client disconnected")
 		}
 	}
 }
@@ -73,16 +68,14 @@ func HandleWebSocket(room *Room, w http.ResponseWriter, r *http.Request) {
 
 	defer ws.Close()
 
-	if room.id == "edi" {
-		room.register <- ws
-		defer func() { room.unregister <- ws }()
+	room.register <- ws
+	defer func() { room.unregister <- ws }()
 
-		for {
-			_, _, err := ws.ReadMessage()
-			if err != nil {
-				log.Println(err)
-				break
-			}
+	for {
+		_, _, err := ws.ReadMessage()
+		if err != nil {
+			log.Println(err)
+			break
 		}
 	}
 }

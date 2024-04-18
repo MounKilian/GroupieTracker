@@ -52,7 +52,6 @@ body {
     justify-content: center;
     align-self: center;
 }
-
 .screen-container {
     height: 65%;
     background-image: url('img/screenT.png');
@@ -63,7 +62,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .form-container {
     margin: 7vh;
     background-color: rgba(240, 116, 255, 0.1);
@@ -76,7 +74,6 @@ body {
     display: flex;
     border-bottom: 1px solid #333;
 }
-
 .onglet {
     width: 50%;
     display: flex;
@@ -92,7 +89,6 @@ body {
     width: 100%;
     display: none;
 }
-
 .active {
     background-color: #6c00bd;
     color: #f1f1f1;
@@ -117,7 +113,6 @@ body {
     border: 2px solid #ffdd00;
     border-radius: 5px;
 }
-
 .login-form {
     background-color: #ffffff;
     padding: 20px;
@@ -130,7 +125,6 @@ body {
     display: flex;
     justify-content: center;
 }
-
 @media (max-width: 768px) {
     .containerGauche,
     .containerDroit {
@@ -142,14 +136,12 @@ body {
     .animateur {
         display: none;
     }
-
     .canape {
         width: 100%;
     }
     .television {
         width: 100%;
     }
-
     .responsiveAnimateur {
         width: 100%;
         display: block;

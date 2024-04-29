@@ -32,7 +32,7 @@ func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	return response
 }
 
-func Formulaire(w http.ResponseWriter, r *http.Request) User {
+func Formulaire(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
@@ -63,8 +63,8 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 					log.Println("ERROR : Wrong connection information")
 				} else {
 					roomId := r.URL.Query().Get("roomId")
+					SetCookie(w, user)
 					http.Redirect(w, r, "/waiting"+roomId, http.StatusFound)
-					return user
 				}
 			}
 		} else if key == "connect-log" {
@@ -77,12 +77,9 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 			if user.pseudo == "" {
 				log.Println("ERROR : Wrong connection information")
 			} else {
-				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-				return user
+				SetCookie(w, user)
+				http.Redirect(w, r, "/scattegories", http.StatusFound)
 			}
 		}
 	}
-
-	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-	return user
 }

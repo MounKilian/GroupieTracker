@@ -8,15 +8,13 @@ import (
 var questions = []Question{}
 
 func Server() {
-	var currentUser User
 	var letter string
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		Home(w, r)
 	})
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
-		currentUser = Formulaire(w, r)
-		fmt.Println(currentUser)
+		Formulaire(w, r)
 	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
 		letter = selectRandomLetter()

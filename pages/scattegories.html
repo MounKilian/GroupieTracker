@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        {{ . }}
+        {{. }}
         <div class="table-conteneur">
             <table id="heroes-table" class="table-scrollable">
                 <thead >
@@ -30,7 +30,21 @@
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" form="scattegories" value="Submit">SUbmit</button>
+            <button type="submit" form="scattegories" value="Submit">Submit</button>
+            <p id="timer"></p>
         </div>
+
+        <script>
+            let timerElement = document.getElementById("timer");
+            let timeLeft = 5;
+            let timerInterval = setInterval(function() {
+                timerElement.textContent = `Time left: ${timeLeft} seconds`;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("scattegories").submit();
+                }
+            }, 1000);
+        </script>
     </body>
 </html>

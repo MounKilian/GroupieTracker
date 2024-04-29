@@ -2,29 +2,33 @@ package groupieTracker
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ScattegoriesForm(w http.ResponseWriter, r *http.Request, letter string) []string {
+type Question struct {
+	Artist            string
+	Album             string
+	GroupeDeMusic     string
+	InstrumentDeMusic string
+	Featuring         string
+}
+
+func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	if err := r.ParseForm(); err != nil {
 		log.Fatal(err)
 	}
 
-	var response []string
-	for key := range r.Form {
-		fmt.Println(letter, r.FormValue(key))
-		fmt.Println(strings.ToLower(r.FormValue(key))[0], strings.ToLower(letter)[0])
-		if strings.ToLower(r.FormValue(key))[0] == strings.ToLower(letter)[0] {
-			response = append(response, r.FormValue(key))
-		}
-	}
+	var response Question
+	response.Artist = r.FormValue("artist")
+	response.Album = r.FormValue("album")
+	response.GroupeDeMusic = r.FormValue("groupe-de-music")
+	response.InstrumentDeMusic = r.FormValue("instrument-de-music")
+	response.Featuring = r.FormValue("featuring")
 
-	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
+	http.Redirect(w, r, "/verification", http.StatusFound)
 	return response
 }
 
@@ -58,7 +62,8 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 				if user.pseudo == "" {
 					log.Println("ERROR : Wrong connection information")
 				} else {
-					http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
+					roomId := r.URL.Query().Get("roomId")
+					http.Redirect(w, r, "/waiting"+roomId, http.StatusFound)
 					return user
 				}
 			}

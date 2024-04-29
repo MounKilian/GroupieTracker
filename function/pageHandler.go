@@ -21,3 +21,11 @@ func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
 	}
 	template.Execute(w, letter)
 }
+
+func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Question) {
+	template, err := template.ParseFiles("./pages/sctVerification.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, data)
+}

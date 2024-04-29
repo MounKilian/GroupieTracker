@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+var questions = []Question{}
+
 func Server() {
 	var currentUser User
 	var letter string
@@ -21,8 +23,12 @@ func Server() {
 		Scattegories(w, r, letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
-		response := ScattegoriesForm(w, r, letter)
-		fmt.Println(response)
+		response := ScattegoriesForm(w, r)
+		questions = append(questions, response)
+		fmt.Println(questions)
+	})
+	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
+		ScattegoriesVerification(w, r, questions[0])
 	})
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))

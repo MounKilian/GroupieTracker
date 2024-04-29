@@ -1,23 +1,66 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>test</title>
+        <title>Groupie caca</title>
         <meta charset="utf-8"/>
-        <link rel="stylesheet" type="text/css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <div>
-            <h1>Login</h1>
-            <div>
-                <form id="estart" method="post" action="/checkUser">
-                    <input required name="connect-log" type="text" value="" placeholder="E-mail"/>
-                    <br>
-                    <input required name="password-log" type="password" value="" placeholder="Password"/>
-                </form>
-                <button type="submit" form="estart" value="Submit">Start</button>
-                <form method="post" action="/checkUser">
-                    <button name="signin" type="signin">Singin</button>
-                </form>
+        <div class="container">
+            <div class="containerGauche">
+                <div class="animateur">
+                    <img src="./static/img/animateur.png" alt="Animateur">
+                </div>
+            </div>
+            <div class="containerDroit">
+                <div class="screen-container">
+                <div class="form-container">
+                    <div class="container-onglets">
+                        <div class="onglet active" data-anim="1">Login</div>
+                        <div class="onglet" data-anim="2">Sign in</div>
+                    </div>
+                    <div class="content activeContent" data-anim="1">
+                        <form id="estart" method="post" action="/checkUser">
+                            <input required name="connect-log" id="pseudo" type="text" value="" placeholder="Identifiant"/>
+                            <br><br>
+                            <input required name="password-log" id="password" type="password" value="" placeholder="Password"/>
+                            <br><br>
+                            <button type="submit" form="estart" value="Submit">Start</button>
+                        </form>
+                    </div>
+                    <div class="content" data-anim="2">
+                        <form id="eslogin" method="post" action="/checkUser">
+                            <input required name="connect-log" id="pseudoLogin" type="text" value="" placeholder="Pseudo"/>
+                            <br><br>
+                            <input required name="email-log" id="emailLogin" type="text" value="" placeholder="E-mail"/>
+                            <br><br>
+                            <input required name="password-log" id="passwordLogin" type="password" value="" placeholder="Password"/>
+                            <br><br>
+                            <input required name="password2-log" id="password2Login" type="password" value="" placeholder="Verification Password"/>
+                            <br><br>
+                            <form method="post" action="/checkUser">
+                                <button name="signin" type="signin">Singin</button>
+                            </form>
+                        </form>
+                    </div>
+                </div>
+                </div>
+                <div class="canape">
+                    <img src="./static/img/canape.png" alt="Canapé">
+                </div>
+                <div class="responsiveAnimateur">
+                    <img src="./static/img/responsiveAnimateur.png" alt="Animateur">
+                </div>
             </div>
         </div>
+    </body>
+    <script src="./static/style.js"></script>
+    <script>
+        let ws = new WebSocket("ws://10.70.1.85:8080/ws")
+
+        ws.onopen = function() {
+            console.log(`Connected to WebSocket server`)
+        }
+    </script>
 </html>

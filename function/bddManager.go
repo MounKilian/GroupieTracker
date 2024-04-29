@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -69,6 +70,82 @@ func resetUserTable(db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func createNewRoom(db *sql.DB, value [4]string) {
+	//Convert to int
+	nbMaxPlayer, _ := strconv.Atoi(value[1])
+	created_by, _ := strconv.Atoi(value[0])
+	id_game, _ := strconv.Atoi(value[3])
+	if nbMaxPlayer > 6 {
+		log.Println("to much player")
+	} else {
+		insertQuery := "INSERT INTO ROOMS (id, created_by, max_player, name, id_game) VALUES (?, ?, ?, ?, ?)"
+		_, err := db.Exec(insertQuery, nil, created_by, nbMaxPlayer, value[2], id_game)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		currentUserValue := [2]int{getRoomFromUser(db, created_by), created_by}
+		addPlayer(db, currentUserValue)
+	}
+}
+
+func addPlayer(db *sql.DB, value [2]int) {
+	if checkNbPlayer(db, value[0]) > getMaxPlayer(db, value[0]) {
+		log.Println("Party already full")
+	} else {
+		insertQuery := "INSERT INTO ROOM_USERS (id_room, id_user, score) VALUES (?, ?, ?)"
+		_, err := db.Exec(insertQuery, value[0], value[1], 0)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func updatePlayerScore(db *sql.DB, id_room int, score User) {
+	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ?"
+	_, err := db.Exec(insertQuery, score, id_room)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func checkNbPlayer(db *sql.DB, id_room int) int {
+	var nbPLayer int
+	query := "SELECT COUNT(*) FROM ROOM_USERS WHERE id_room = ?"
+	err := db.QueryRow(query, id_room).Scan(&nbPLayer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nbPLayer
+}
+
+func getMaxPlayer(db *sql.DB, id_room int) int {
+	var nbMaxPlayer int
+
+	query := "SELECT `max_player` FROM ROOMS WHERE id = ?"
+	err := db.QueryRow(query, id_room).Scan(&nbMaxPlayer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return nbMaxPlayer
+}
+
+func getRoomFromUser(db *sql.DB, id_user int) int {
+	var idRoom int
+
+	query := "SELECT id FROM ROOMS WHERE created_by = ?"
+	err := db.QueryRow(query, id_user).Scan(&idRoom)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return idRoom
+}
+
+func CreateRoomTest(db *sql.DB) {
+	value := [4]string{"2", "4", "zfzef", "1"}
+	createNewRoom(db, value)
 }
 
 func GetUserById(db *sql.DB, id int) User {

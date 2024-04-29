@@ -9,6 +9,7 @@ import (
 )
 
 type Question struct {
+	Username          string
 	Artist            string
 	Album             string
 	GroupeDeMusic     string
@@ -17,11 +18,19 @@ type Question struct {
 }
 
 func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 	if err := r.ParseForm(); err != nil {
 		log.Fatal(err)
 	}
 
+	userId := GetCoockie(w, r, "userId")
+
 	var response Question
+	response.Username = GetUserById(db, userId).pseudo
 	response.Artist = r.FormValue("artist")
 	response.Album = r.FormValue("album")
 	response.GroupeDeMusic = r.FormValue("groupe-de-music")
@@ -78,7 +87,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 				log.Println("ERROR : Wrong connection information")
 			} else {
 				SetCookie(w, user)
-				http.Redirect(w, r, "/scattegories", http.StatusFound)
+				http.Redirect(w, r, "/waiting", http.StatusFound)
 			}
 		}
 	}

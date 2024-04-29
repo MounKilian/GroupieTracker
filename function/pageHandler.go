@@ -29,3 +29,12 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Quest
 	}
 	template.Execute(w, data)
 }
+
+func Waiting(w http.ResponseWriter, r *http.Request) {
+	userid := GetCoockie(w, r, "userId")
+	template, err := template.ParseFiles("./pages/waiting.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, userid)
+}

@@ -70,3 +70,9 @@ func resetUserTable(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+
+func GetUserById(db *sql.DB, id int) User {
+	var u User
+	db.QueryRow("SELECT * FROM `USER` WHERE id = ?", id).Scan(&u.id, &u.pseudo, &u.email, &u.password)
+	return u
+}

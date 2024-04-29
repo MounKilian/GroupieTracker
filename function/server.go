@@ -28,6 +28,9 @@ func Server() {
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
 		ScattegoriesVerification(w, r, questions[0])
 	})
+	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
+		Waiting(w, r)
+	})
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 	http.ListenAndServe(":8080", nil)

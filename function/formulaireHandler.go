@@ -42,6 +42,7 @@ func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 }
 
 func Formulaire(w http.ResponseWriter, r *http.Request) {
+	DeleteCookies(w, r)
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)

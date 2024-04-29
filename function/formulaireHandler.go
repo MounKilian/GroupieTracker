@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"unicode"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -42,7 +41,7 @@ func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	return response
 }
 
-func Formulaire(w http.ResponseWriter, r *http.Request) User {
+func Formulaire(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
@@ -72,8 +71,8 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 				if user.pseudo == "" {
 					log.Println("ERROR : Wrong connection information")
 				} else {
+					SetCookie(w, user)
 					http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-					return user
 				}
 			}
 		} else if key == "connect-log" {
@@ -86,31 +85,9 @@ func Formulaire(w http.ResponseWriter, r *http.Request) User {
 			if user.pseudo == "" {
 				log.Println("ERROR : Wrong connection information")
 			} else {
-				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-				return user
+				SetCookie(w, user)
+				http.Redirect(w, r, "/waiting", http.StatusFound)
 			}
 		}
 	}
-
-	http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-	return user
-}
-
-func VerifyPassword(s string) bool {
-	var hasNumber, hasUpperCase, hasLowercase, hasSpecial bool
-	for _, c := range s {
-		switch {
-		case unicode.IsNumber(c):
-			hasNumber = true
-		case unicode.IsUpper(c):
-			hasUpperCase = true
-		case unicode.IsLower(c):
-			hasLowercase = true
-		case c == '#' || c == '|':
-			return false
-		case unicode.IsPunct(c) || unicode.IsSymbol(c):
-			hasSpecial = true
-		}
-	}
-	return hasNumber && hasUpperCase && hasLowercase && hasSpecial
 }

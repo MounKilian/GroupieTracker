@@ -33,7 +33,18 @@
             <button type="submit" form="scattegories" value="Submit">Submit</button>
             <p id="timer"></p>
         </div>
-
+        <script>
+            let ws = new WebSocket("ws://10.70.1.85:8080/ws")
+    
+            ws.onopen = function(){
+                console.log("Websocket open")
+            }
+    
+            ws.onmessage = function(event){
+                console.log(event)
+    
+            }
+        </script>
         <script>
             let timerElement = document.getElementById("timer");
             let timeLeft = 60;

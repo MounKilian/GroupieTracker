@@ -8,7 +8,6 @@
     </head>
     <body>
         <h1>{{.}}</h1>
-        <button><a href="/scattegories">PLAY</a></button>
     </body>
     <script>
         let ws = new WebSocket("ws://10.70.1.85:8080/ws")
@@ -17,9 +16,10 @@
             console.log("Websocket open")
         }
 
-        ws.onmessage = function(event){
-            console.log(event)
-
+        ws.onmessage = function(event) {
+            if (event.data === "data") {
+                window.location.href = "/scattegories"
+            }
         }
     </script>
 </html>

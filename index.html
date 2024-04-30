@@ -59,8 +59,13 @@
     <script>
         let ws = new WebSocket("ws://10.70.1.85:8080/ws")
 
-        ws.onopen = function() {
-            console.log(`Connected to WebSocket server`)
+        ws.onopen = function(){
+            console.log("Websocket open")
+        }
+
+        ws.onmessage = function(event){
+            console.log(event)
+
         }
     </script>
 </html>

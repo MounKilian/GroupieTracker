@@ -21,6 +21,14 @@ func Server() {
 	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
 		letter = selectRandomLetter()
+		for conn := range room.clients {
+			err := conn.WriteMessage(websocket.TextMessage, []byte("data"))
+			if err != nil {
+				log.Println("Error writing message:", err)
+				conn.Close()
+				delete(room.clients, conn)
+			}
+		}
 		Scattegories(w, r, letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +92,7 @@ func HandleWebSocket(room *Room, w http.ResponseWriter, r *http.Request) {
 
 	defer ws.Close()
 
+	room.clients[ws] = true
 	room.register <- ws
 	defer func() { room.unregister <- ws }()
 

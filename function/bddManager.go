@@ -135,12 +135,23 @@ func getMaxPlayer(db *sql.DB, id_room int) int {
 func getRoomFromUser(db *sql.DB, id_user int) int {
 	var idRoom int
 
-	query := "SELECT id FROM ROOMS WHERE created_by = ?"
+	query := "SELECT MAX(id) FROM ROOMS WHERE created_by = ?"
 	err := db.QueryRow(query, id_user).Scan(&idRoom)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return idRoom
+}
+
+func GetCrteatedPlayer(db *sql.DB, id_room int) int {
+	var idCreatedPlayer int
+
+	query := "SELECT created_by FROM ROOMS WHERE id = ?"
+	err := db.QueryRow(query, id_room).Scan(&idCreatedPlayer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return idCreatedPlayer
 }
 
 func CreateRoomTest(db *sql.DB) {

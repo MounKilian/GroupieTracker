@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Groupie caca</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+
+
+<body>
+<header>
+    <div class="logo">
+        <img src="../static/img/logo.png" alt="Logo">
+    </div>
+    <div>
+        k
+    </div>
+</header>
+<div class="container">
+    <div class="containerGauche">
+        <div class="animateur">
+            <img src="../static/img/animateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerDroit">
+        <div class="screen-container">
+            <div class="join-container">
+            </div>
+        </div>
+        <div class="canape">
+            <img src="../static/img/canape.png" alt="Canapé">
+        </div>
+        <div class="responsiveAnimateur">
+            <img src="../static/img/responsiveAnimateur.png" alt="Animateur">
+        </div>
+    </div>
+</div>
+</body>
+<script src="../static/style.js"></script>
+<script>
+    let ws = new WebSocket("ws://10.70.1.85:8080/ws")
+
+    ws.onopen = function() {
+        console.log(`Connected to WebSocket server`)
+    }
+</script>
+</html>
+</html>

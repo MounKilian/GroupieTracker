@@ -28,7 +28,7 @@ func checkUser(db *sql.DB, value [3]string) int {
 	query := "SELECT COUNT(*) FROM USER WHERE pseudo = ? OR email = ?"
 	err := db.QueryRow(query, value[0], value[1]).Scan(&nbAccount)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err)x
 	}
 	return nbAccount
 }

@@ -14,17 +14,20 @@ func Server() {
 	var currentUser User
 
 	http.HandleFunc("/", Home)
+	http.HandleFunc("/roomManager", RoomManager)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		currentUser = Formulaire(w, r)
 		fmt.Println(currentUser)
 	})
+
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)
 	})
+
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 	http.ListenAndServe(":8080", nil)
-}
+}()
 
 type Room struct {
 	id         string

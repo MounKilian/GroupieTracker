@@ -4,57 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
 
 var questions = []Question{}
 
-func Server() {
-	room := NewRoom()
-	go room.Start()
-	var letter string
-
-	http.HandleFunc("/", Home)
-	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
-		Formulaire(w, r)
-	})
-	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
-		letter = selectRandomLetter()
-		for conn := range room.clients {
-			err := conn.WriteMessage(websocket.TextMessage, []byte("data"))
-			if err != nil {
-				log.Println("Error writing message:", err)
-				conn.Close()
-				delete(room.clients, conn)
-			}
-		}
-		Scattegories(w, r, letter)
-	})
-	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
-		response := ScattegoriesForm(w, r)
-		questions = append(questions, response)
-		fmt.Println(questions)
-	})
-	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
-		ScattegoriesVerification(w, r, questions[0])
-	})
-	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
-		Waiting(w, r)
-	})
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		HandleWebSocket(room, w, r)
-	})
-	fs := http.FileServer(http.Dir("static/"))
-	http.Handle("/static/", http.StripPrefix("/static", fs))
-	http.ListenAndServe(":8080", nil)
-}
-
 type Room struct {
 	id         string
 	clients    map[*websocket.Conn]bool
 	register   chan *websocket.Conn
 	unregister chan *websocket.Conn
+	mu         sync.RWMutex
+	letter     string
 }
 
 var upgrader = websocket.Upgrader{
@@ -81,6 +44,55 @@ func (room *Room) Start() {
 			log.Println("Client disconnected")
 		}
 	}
+}
+
+func (room *Room) broadcastMessage(message string) {
+	room.mu.Lock()
+	for conn := range room.clients {
+		err := conn.WriteMessage(websocket.TextMessage, []byte(message))
+		if err != nil {
+			log.Println("Error writing message:", err)
+			conn.Close()
+			delete(room.clients, conn)
+		}
+	}
+	room.mu.Unlock()
+}
+
+func Server() {
+	room := NewRoom()
+	go room.Start()
+
+	http.HandleFunc("/", Home)
+	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
+		Formulaire(w, r)
+	})
+	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
+		room.broadcastMessage("data_" + room.letter)
+		Scattegories(w, r, room.letter)
+	})
+	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
+		response := ScattegoriesForm(w, r)
+		questions = append(questions, response)
+		fmt.Println(questions)
+	})
+	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
+		ScattegoriesVerification(w, r, questions[0])
+	})
+	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
+		userid := GetCoockie(w, r, "userId")
+		if userid == 3 {
+			room.letter = selectRandomLetter()
+			room.broadcastMessage(room.letter)
+		}
+		Waiting(w, r)
+	})
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		HandleWebSocket(room, w, r)
+	})
+	fs := http.FileServer(http.Dir("static/"))
+	http.Handle("/static/", http.StripPrefix("/static", fs))
+	http.ListenAndServe(":8080", nil)
 }
 
 func HandleWebSocket(room *Room, w http.ResponseWriter, r *http.Request) {

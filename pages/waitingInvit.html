@@ -17,7 +17,7 @@
         }
 
         ws.onmessage = function(event) {
-            if (event.data === "data") {
+            if (event.data.startsWith("data")){
                 window.location.href = "/scattegories"
             }
         }

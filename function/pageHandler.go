@@ -39,7 +39,7 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	if userid == 1 {
-		values := [2]int{81, 1}
+		values := [2]int{95, 1}
 		addPlayer(db, values)
 		template, err := template.ParseFiles("./pages/waitingInvit.html")
 		if err != nil {

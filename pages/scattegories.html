@@ -30,8 +30,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" form="scattegories" value="Submit">Submit</button>
-            <p id="timer"></p>
+            <button type="submit" form="scattegories" value="Submit"><p id="timer"></p><a href="/scattegoriesChecker">Submit</a></button>
         </div>
         <script>
             let ws = new WebSocket("ws://10.70.1.85:8080/ws")
@@ -41,9 +40,12 @@
             }
     
             ws.onmessage = function(event){
-
-                console.log(event)
+                if (event.data === "end"){
+                    document.getElementById("scattegories").submit()
+                    window.location.href = "/scattegoriesChecker"
+                }
             }
+
         </script>
         <script>
             let timerElement = document.getElementById("timer");

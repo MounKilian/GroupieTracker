@@ -11,6 +11,8 @@ import (
 
 var questions = []Question{}
 
+var state = false
+
 type Room struct {
 	id         string
 	clients    map[*websocket.Conn]bool
@@ -56,7 +58,7 @@ func (room *Room) broadcastMessage(message string) {
 			delete(room.clients, conn)
 		}
 	}
-	room.mu.Unlock()
+	defer room.mu.Unlock()
 }
 
 func Server() {
@@ -72,12 +74,26 @@ func Server() {
 		Scattegories(w, r, room.letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
-		response := ScattegoriesForm(w, r)
-		questions = append(questions, response)
-		fmt.Println(questions)
+		userid := GetCoockie(w, r, "userId")
+		if userid == 3 {
+			if !state {
+				room.broadcastMessage("end")
+				state = true
+				response := ScattegoriesForm(w, r)
+				questions = append(questions, response)
+				fmt.Println(questions)
+			} else {
+				ScattegoriesForm(w, r)
+			}
+		} else {
+			response := ScattegoriesForm(w, r)
+			questions = append(questions, response)
+			fmt.Println(questions)
+		}
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
 		ScattegoriesVerification(w, r, questions[0])
+		ScattegoriesVerification(w, r, questions[1])
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		userid := GetCoockie(w, r, "userId")

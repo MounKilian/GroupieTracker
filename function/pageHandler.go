@@ -38,3 +38,11 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 	}
 	template.Execute(w, userid)
 }
+
+func DeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+	template, err := template.ParseFiles("./pages/waiting.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, currentMusic)
+}

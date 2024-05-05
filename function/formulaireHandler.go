@@ -86,8 +86,21 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 				log.Println("ERROR : Wrong connection information")
 			} else {
 				SetCookie(w, user)
-				http.Redirect(w, r, "/waiting", http.StatusFound)
+				http.Redirect(w, r, "/deaftest", http.StatusFound)
 			}
 		}
 	}
+}
+
+func CheckDeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
+
+	musicName := r.FormValue("music-namen")
+	if musicName == currentMusic.name {
+		http.Redirect(w, r, "/", http.StatusFound)
+	}
+
+	http.Redirect(w, r, "/deaftest", http.StatusFound)
 }

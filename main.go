@@ -6,4 +6,5 @@ import (
 
 func main() {
 	groupieTracker.Server()
+	groupieTracker.SpotifyAPI()
 }

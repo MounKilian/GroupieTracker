@@ -9,6 +9,7 @@ import (
 )
 
 func Server() {
+	SpotifyAPI()
 	room := NewRoom()
 	go room.Start()
 	var currentUser User

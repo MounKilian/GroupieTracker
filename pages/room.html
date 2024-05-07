@@ -7,8 +7,11 @@
         <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <h1>{{.}}</h1>
-        <button><a href="/startPlaying">PLAY</a></button>
+        <form id="join" method="post" action="/waitingInvit">
+            <input type="text" name="join" placeholder="Join" />
+            <button type="submit">Join</button>
+        </form>
+        <button type="button" onclick="location.href='/waiting'">Create</button>
     </body>
     <script>
         let ws = new WebSocket("ws://10.70.1.85:8080/ws")

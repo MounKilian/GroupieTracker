@@ -93,15 +93,20 @@ func Server() {
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
 		ScattegoriesVerification(w, r, questions[0])
-		ScattegoriesVerification(w, r, questions[1])
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
-		userid := GetCoockie(w, r, "userId")
-		if userid == 3 {
-			room.letter = selectRandomLetter()
-			room.broadcastMessage(room.letter)
-		}
 		Waiting(w, r)
+	})
+	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
+		RoomStart(w, r)
+	})
+	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
+		room.letter = selectRandomLetter()
+		room.broadcastMessage(room.letter)
+		http.Redirect(w, r, "/scattegories", http.StatusFound)
+	})
+	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {
+		WaitingInvit(w, r)
 	})
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)

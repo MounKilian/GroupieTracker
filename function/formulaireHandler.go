@@ -87,7 +87,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 				log.Println("ERROR : Wrong connection information")
 			} else {
 				SetCookie(w, user)
-				http.Redirect(w, r, "/waiting", http.StatusFound)
+				http.Redirect(w, r, "/room", http.StatusFound)
 			}
 		}
 	}

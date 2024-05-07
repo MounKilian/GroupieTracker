@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +32,35 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Quest
 	template.Execute(w, data)
 }
 
+func RoomStart(w http.ResponseWriter, r *http.Request) {
+	template, err := template.ParseFiles("./pages/room.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, nil)
+}
+
+func WaitingInvit(w http.ResponseWriter, r *http.Request) {
+	responseJoin := r.FormValue("join")
+	userid := GetCoockie(w, r, "userId")
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	IDroom, err := GetRoomByName(db, responseJoin)
+	if err != nil {
+		log.Fatal(err)
+	}
+	values := [2]int{IDroom, userid}
+	addPlayer(db, values)
+	template, err := template.ParseFiles("./pages/waitingInvit.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, responseJoin)
+}
+
 func Waiting(w http.ResponseWriter, r *http.Request) {
 	userid := GetCoockie(w, r, "userId")
 	db, err := sql.Open("sqlite3", "BDD.db")
@@ -38,23 +68,14 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	if userid == 1 {
-		values := [2]int{95, 1}
-		addPlayer(db, values)
-		template, err := template.ParseFiles("./pages/waitingInvit.html")
-		if err != nil {
-			log.Fatal(err)
-		}
-		template.Execute(w, userid)
-	} else {
-		value := [4]string{"3", "6", "TestGame", "3"}
-		createNewRoom(db, value)
-		template, err := template.ParseFiles("./pages/waiting.html")
-		if err != nil {
-			log.Fatal(err)
-		}
-		template.Execute(w, userid)
+	access := RandomString()
+	value := [4]string{strconv.Itoa(userid), "6", access, "3"}
+	createNewRoom(db, value)
+	template, err := template.ParseFiles("./pages/waiting.html")
+	if err != nil {
+		log.Fatal(err)
 	}
+	template.Execute(w, access)
 }
 
 func StartGame(w http.ResponseWriter, r *http.Request) {

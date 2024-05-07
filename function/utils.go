@@ -3,6 +3,7 @@ package groupieTracker
 import (
 	"crypto/sha256"
 	"fmt"
+	"math/rand"
 	"unicode"
 )
 
@@ -28,4 +29,14 @@ func VerifyPassword(s string) bool {
 		}
 	}
 	return hasNumber && hasUpperCase && hasLowercase && hasSpecial
+}
+
+func RandomString() string {
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	b := make([]rune, 5)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

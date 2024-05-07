@@ -164,3 +164,14 @@ func GetUserById(db *sql.DB, id int) User {
 	db.QueryRow("SELECT * FROM `USER` WHERE id = ?", id).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
 }
+
+func GetRoomByName(db *sql.DB, roomName string) (int, error) {
+	var idRoom int
+
+	query := "SELECT id FROM ROOMS WHERE name =?"
+	err := db.QueryRow(query, roomName).Scan(&idRoom)
+	if err!= nil {
+		return 0, err
+	}
+	return idRoom, nil
+}

@@ -32,7 +32,7 @@ func VerifyPassword(s string) bool {
 }
 
 func RandomString() string {
-	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 	b := make([]rune, 5)
 	for i := range b {

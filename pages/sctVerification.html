@@ -60,7 +60,7 @@
 				<button class="button-false" name="featuring" value="false" onclick="nextQuestion(4)">Faux</button>
 			</div>
 		<script>
-			let ws = new WebSocket("ws://10.70.1.85:8080/ws")
+			let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
 	
 			ws.onopen = function(){
 				console.log("Websocket open")

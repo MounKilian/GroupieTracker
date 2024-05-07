@@ -5,8 +5,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 )
+
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	template, err := template.ParseFiles("./index.html")
@@ -69,6 +71,7 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	access := RandomString()
+	url.QueryEscape(access)
 	value := [4]string{strconv.Itoa(userid), "6", access, "3"}
 	createNewRoom(db, value)
 	template, err := template.ParseFiles("./pages/waiting.html")

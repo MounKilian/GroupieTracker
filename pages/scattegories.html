@@ -33,7 +33,7 @@
             <button type="submit" form="scattegories" value="Submit"><p id="timer"></p><a href="/scattegoriesChecker">Submit</a></button>
         </div>
         <script>
-            let ws = new WebSocket("ws://10.70.1.85:8080/ws")
+            let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
     
             ws.onopen = function(){
                 console.log("Websocket open")
@@ -42,7 +42,6 @@
             ws.onmessage = function(event){
                 if (event.data === "end"){
                     document.getElementById("scattegories").submit()
-                    window.location.href = "/scattegoriesChecker"
                 }
             }
 
@@ -60,4 +59,4 @@
             }, 1000);
         </script>
     </body>
-</html>
+</html> 

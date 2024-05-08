@@ -2,7 +2,6 @@ package groupieTracker
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math/rand"
 
@@ -17,7 +16,7 @@ type Music struct {
 }
 
 // Use spotify API and connect to a specific playlist
-func PlaylistConnect() Music {
+func PlaylistConnect(genderPlaylist string) Music {
 	authConfig := &clientcredentials.Config{
 		ClientID:     "2a8a0128c5aa4458b24fc07d90d76135",
 		ClientSecret: "c0d7e68a34b04b88ae577d71163ab073",
@@ -31,7 +30,7 @@ func PlaylistConnect() Music {
 
 	client := spotify.Authenticator{}.NewClient(accessToken)
 
-	playlistID := spotify.ID("5tYg6pvAiwa3taoNAG3HzC")
+	playlistID := spotify.ID(genderPlaylist)
 	playlist, err := client.GetPlaylist(playlistID)
 	if err != nil {
 		log.Fatalf("error retrieve playlist data: %v", err)
@@ -41,7 +40,6 @@ func PlaylistConnect() Music {
 	randomIndex := GetRandomMusicIndex(playlist)
 	currentMusic.name = playlist.Tracks.Tracks[randomIndex].Track.Name
 	currentMusic.lyrics = GetLyrics(&playlist.Tracks.Tracks[randomIndex].Track)
-	fmt.Println(currentMusic.name)
 
 	return currentMusic
 }

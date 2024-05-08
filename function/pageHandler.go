@@ -27,7 +27,7 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 
 // Scattegories pages
 func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
-	template, err := template.ParseFiles("./pages/scattegories.html")
+	template, err := template.ParseFiles("./pages/scategories/scattegories.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +35,7 @@ func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
 }
 
 func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Question) {
-	template, err := template.ParseFiles("./pages/sctVerification.html")
+	template, err := template.ParseFiles("./pages/scategories/verification.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,15 +43,15 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Quest
 }
 
 // Deaftest pages
-func DeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
 	template, err := template.ParseFiles("./pages/deaftest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, currentMusic.lyrics)
+	template.Execute(w, Deaftest.currentMusic.lyrics)
 }
 
-func DeaftestWin(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
@@ -61,7 +61,7 @@ func DeaftestWin(w http.ResponseWriter, r *http.Request, currentMusic Music) {
 	currentRoom := GetCurrentRoomUser(db, userId)
 	score := GetPlayerScore(db, currentRoom, userId)
 
-	template, err := template.ParseFiles("./pages/deaftestwin.html")
+	template, err := template.ParseFiles("./pages/win.html")
 	if err != nil {
 		log.Fatal(err)
 	}

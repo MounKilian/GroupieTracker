@@ -93,12 +93,12 @@ func createNewRoom(db *sql.DB, value [4]string) {
 		}
 
 		currentUserValue := [2]int{getRoomCreator(db, created_by), created_by}
-		addPlayer(db, currentUserValue)
+		AddPlayer(db, currentUserValue)
 	}
 }
 
 // add player in a specifique room
-func addPlayer(db *sql.DB, value [2]int) {
+func AddPlayer(db *sql.DB, value [2]int) {
 	if checkNbPlayer(db, value[0]) > getMaxPlayer(db, value[0]) {
 		log.Println("Party already full")
 	} else {
@@ -112,7 +112,7 @@ func addPlayer(db *sql.DB, value [2]int) {
 
 // Increments player's score
 func UpdatePlayerScore(db *sql.DB, id_room int, id_user int, score int) {
-	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ? AND id_user = ?"
+	insertQuery := "UPDATE ROOM_USERS SET score = score + ? WHERE id_room = ? AND id_user = ?"
 	_, err := db.Exec(insertQuery, score, id_room, id_user)
 	if err != nil {
 		log.Fatal(err)

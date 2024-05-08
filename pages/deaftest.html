@@ -5,11 +5,24 @@
   </head>
   <body>
     <div class="container">
+      <p id="timer"></p>
       <p class="lyrics">{{ . }}</p>
-      <form id="estart" method="post" action="/deaftestverif">
+      <form id="deaftest" method="post" action="/deaftestChecker">
         <input required name="music-name" type="text" value="" placeholder="Music name"/>
-        <button type="submit" form="estart" value="Submit">submit</button>
       </form>
+      <button type="submit" form="deaftest" value="Submit">Submit</button>
     </div>
   </body>
+  <script>
+    let timerElement = document.getElementById("timer");
+    let timeLeft = 60;
+    let timerInterval = setInterval(function() {
+        timerElement.textContent = `Time left: ${timeLeft} seconds`;
+        timeLeft--;
+        if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            document.getElementById("deaftest").submit();
+        }
+    }, 1000);
+</script>
 </html>

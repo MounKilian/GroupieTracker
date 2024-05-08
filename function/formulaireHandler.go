@@ -2,9 +2,9 @@ package groupieTracker
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -87,13 +87,13 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 				log.Println("ERROR : Wrong connection information")
 			} else {
 				SetCookie(w, user)
-				http.Redirect(w, r, "/deaftest", http.StatusFound)
+				http.Redirect(w, r, "/waiting", http.StatusFound)
 			}
 		}
 	}
 }
 
-func CheckDeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music, currentPlay int, nbPlay int) {
+func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
@@ -104,15 +104,48 @@ func CheckDeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music, c
 	}
 
 	musicName := r.FormValue("music-name")
-	if MatchTitle(currentMusic.name, musicName) {
-		fmt.Println("test")
+	if MatchTitle(Deaftest.currentMusic.name, musicName) {
 		userId := GetCoockie(w, r, "userId")
 		currentRoom := GetCurrentRoomUser(db, userId)
 		UpdatePlayerScore(db, currentRoom, userId, 10)
 	}
-	if currentPlay == nbPlay {
-		http.Redirect(w, r, "/deaftestwin", http.StatusFound)
+	if Deaftest.currentPlay == Deaftest.nbSong {
+		Deaftest.currentPlay = 0
+		http.Redirect(w, r, "/win", http.StatusFound)
 	}
 
 	http.Redirect(w, r, "/deaftest", http.StatusFound)
+}
+
+func WaitingForm(w http.ResponseWriter, r *http.Request) (string, int) {
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
+	var playlistID string
+	gender := r.FormValue("gender")
+	nbSong, err := strconv.Atoi(r.FormValue("nb-song"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	switch gender {
+	case "Rock":
+		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+		break
+	case "Pop":
+		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+		break
+	case "Clasic":
+		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+		break
+	case "Jazz":
+		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+		break
+	default:
+		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+		break
+	}
+
+	http.Redirect(w, r, "/deaftest", http.StatusFound)
+	return playlistID, nbSong
 }

@@ -10,12 +10,18 @@ import (
 
 var questions = []Question{}
 
+type Deaftest struct {
+	gender       string
+	nbSong       int
+	currentMusic Music
+	currentPlay  int
+}
+
 func Server() {
 	room := NewRoom()
 	go room.Start()
 	var letter string
-	var currentMusic Music
-	var currentPlay int
+	var Deaftest Deaftest
 
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
@@ -36,16 +42,19 @@ func Server() {
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		Waiting(w, r)
 	})
+	http.HandleFunc("/waitingChecker", func(w http.ResponseWriter, r *http.Request) {
+		Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
+	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
-		currentMusic = PlaylistConnect()
-		currentPlay++
-		DeafTest(w, r, currentMusic)
+		Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+		Deaftest.currentPlay++
+		DeafTest(w, r, Deaftest)
 	})
-	http.HandleFunc("/deaftestverif", func(w http.ResponseWriter, r *http.Request) {
-		CheckDeafTest(w, r, currentMusic, currentPlay, 1)
+	http.HandleFunc("/deaftestChecker", func(w http.ResponseWriter, r *http.Request) {
+		DeafForm(w, r, Deaftest)
 	})
-	http.HandleFunc("/deaftestwin", func(w http.ResponseWriter, r *http.Request) {
-		DeaftestWin(w, r, currentMusic)
+	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
+		Win(w, r, Deaftest.currentMusic)
 	})
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)

@@ -192,3 +192,13 @@ body {
       transform: translateY(-100%);
     }
 }
+
+#player {
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#player-list {
+	margin-top: 20px;
+}

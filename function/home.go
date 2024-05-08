@@ -12,4 +12,5 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	template.Execute(w, nil)
+	SpotifyAPI(w, r)
 }

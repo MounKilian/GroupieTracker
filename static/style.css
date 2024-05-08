@@ -243,7 +243,22 @@ body {
 
 /* ************************ROOM MANAGER*********************** */
 
-.join-container, .host-container {
+.host-container {
+    width: 35%;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin: 5vh;
+    transition: transform 0.3s ease;
+}
+
+.join-container{
+    height: 78%;
     width: 35%;
     background-color: #7b5eab;
     border-radius: 5px;
@@ -298,9 +313,22 @@ body {
     width: 75%;
     padding: 10px;
     margin-top: 10px;
+    margin-left: 20px;
     border: 2px solid #ffdd00;
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
     text-align: center;
+}
+
+#join{
+    width: 75%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+#button-join{
+    margin-top: 10px;
+    margin-left: 35%;
 }

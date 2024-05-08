@@ -9,6 +9,13 @@ import (
 	"strconv"
 )
 
+type Info struct {
+	Code   string
+	Pseudo []string
+}
+
+var infos Info
+var refresh = true
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	template, err := template.ParseFiles("./index.html")
@@ -42,7 +49,7 @@ func RoomStart(w http.ResponseWriter, r *http.Request) {
 	template.Execute(w, nil)
 }
 
-func WaitingInvit(w http.ResponseWriter, r *http.Request) {
+func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
 	responseJoin := r.FormValue("join")
 	userid := GetCoockie(w, r, "userId")
 	db, err := sql.Open("sqlite3", "BDD.db")
@@ -56,14 +63,27 @@ func WaitingInvit(w http.ResponseWriter, r *http.Request) {
 	}
 	values := [2]int{IDroom, userid}
 	addPlayer(db, values)
+	user := GetUserById(db, userid)
+	pseudo := user.pseudo
+	for _, i := range infos.Pseudo {
+		if i == pseudo {
+			refresh = false
+		}
+	}
+	if refresh {
+		infos.Pseudo = append(infos.Pseudo, pseudo)
+		infos = Info{responseJoin, infos.Pseudo}
+		room.broadcastMessage("newUser")
+	}
+	refresh = true
 	template, err := template.ParseFiles("./pages/waitingInvit.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, responseJoin)
+	template.Execute(w, infos)
 }
 
-func Waiting(w http.ResponseWriter, r *http.Request) {
+func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 	userid := GetCoockie(w, r, "userId")
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
@@ -74,11 +94,24 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 	url.QueryEscape(access)
 	value := [4]string{strconv.Itoa(userid), "6", access, "3"}
 	createNewRoom(db, value)
+	user := GetUserById(db, userid)
+	pseudo := user.pseudo
+	for _, i := range infos.Pseudo {
+		if i == pseudo {
+			refresh = false
+		}
+	}
+	if refresh {
+		infos.Pseudo = append(infos.Pseudo, pseudo)
+		infos = Info{access, infos.Pseudo}
+		room.broadcastMessage("newUser")
+	}
+	refresh = true
 	template, err := template.ParseFiles("./pages/waiting.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, access)
+	template.Execute(w, infos)
 }
 
 func StartGame(w http.ResponseWriter, r *http.Request) {

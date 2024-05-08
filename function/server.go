@@ -98,7 +98,7 @@ func Server() {
 		ScattegoriesVerification(w, r, questions[0])
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
-		Waiting(w, r)
+		Waiting(w, r, room)
 	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
 		RoomStart(w, r)
@@ -109,7 +109,7 @@ func Server() {
 		http.Redirect(w, r, "/scattegories", http.StatusFound)
 	})
 	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {
-		WaitingInvit(w, r)
+		WaitingInvit(w, r, room)
 	})
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)

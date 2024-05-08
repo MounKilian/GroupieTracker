@@ -7,7 +7,10 @@
         <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <h1>{{.}}</h1>
+        <h1>Code de jeu : {{.Code}}</h1>
+        {{range $val := .Pseudo}}
+            <option value="{{$val}}">{{$val}}</option>
+        {{end}}
     </body>
     <script>
         let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -19,6 +22,9 @@
         ws.onmessage = function(event) {
             if (event.data.startsWith("data")){
                 window.location.href = "/scattegories"
+            }
+            if (event.data == "newUser"){
+                window.location.href = "/waitingInvit"
             }
         }
     </script>

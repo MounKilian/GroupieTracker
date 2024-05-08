@@ -71,7 +71,6 @@ func Server() {
 		Formulaire(w, r)
 	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
-		room.broadcastMessage("data")
 		Scattegories(w, r, room.letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
@@ -106,6 +105,7 @@ func Server() {
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
 		room.letter = selectRandomLetter()
 		room.broadcastMessage(room.letter)
+		room.broadcastMessage("data")
 		http.Redirect(w, r, "/scattegories", http.StatusFound)
 	})
 	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {

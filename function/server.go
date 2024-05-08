@@ -37,7 +37,7 @@ func Server() {
 		Waiting(w, r)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
-		currentMusic = PlaylistConnect(1)
+		currentMusic = PlaylistConnect()
 		currentPlay++
 		DeafTest(w, r, currentMusic)
 	})

@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"log"
+	"math/rand/v2"
 	"strconv"
 	"strings"
 	"unicode"
@@ -13,6 +14,13 @@ import (
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
 )
+
+var Letters = []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y", "Z"}
+
+func selectRandomLetter() string {
+	randomIndex := rand.IntN(len(Letters) - 1)
+	return Letters[randomIndex]
+}
 
 func Encrypt(password string) string {
 	hash := sha256.Sum256([]byte(password))

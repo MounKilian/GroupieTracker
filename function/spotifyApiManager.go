@@ -16,7 +16,8 @@ type Music struct {
 	lyrics string
 }
 
-func PlaylistConnect(nbPlay int) Music {
+// Use spotify API and connect to a specific playlist
+func PlaylistConnect() Music {
 	authConfig := &clientcredentials.Config{
 		ClientID:     "2a8a0128c5aa4458b24fc07d90d76135",
 		ClientSecret: "c0d7e68a34b04b88ae577d71163ab073",
@@ -45,12 +46,14 @@ func PlaylistConnect(nbPlay int) Music {
 	return currentMusic
 }
 
+// Select a random music index from the playlist
 func GetRandomMusicIndex(playlist *spotify.FullPlaylist) int {
 	maxIndex := playlist.Tracks.Total
 	trackIndex := rand.Intn(maxIndex-1) + 1
 	return trackIndex
 }
 
+// Find music's lyrics using multiple API
 func GetLyrics(track *spotify.FullTrack) string {
 	var artistName string
 	for _, artist := range track.Artists {

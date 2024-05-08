@@ -22,6 +22,7 @@ func selectFromTable(db *sql.DB, table string) *sql.Rows {
 	return result
 }
 
+// Find occurence for a specifique user
 func checkUser(db *sql.DB, value [3]string) int {
 	var nbAccount int
 
@@ -33,6 +34,7 @@ func checkUser(db *sql.DB, value [3]string) int {
 	return nbAccount
 }
 
+// create a new user in database
 func createUser(db *sql.DB, value [3]string) {
 	if checkUser(db, value) == 0 {
 		insertQuery := "INSERT INTO USER (id, pseudo, email, password) VALUES (?, ?, ?, ?)"
@@ -43,12 +45,14 @@ func createUser(db *sql.DB, value [3]string) {
 	}
 }
 
+// Return user information as User
 func connectUser(db *sql.DB, value [2]string) User {
 	var u User
 	db.QueryRow("SELECT * FROM `USER` WHERE pseudo = ? OR email = ? AND password = ?", value[0], value[0], value[1]).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
 }
 
+// Print specifique rows
 func displayUserRows(rows *sql.Rows) {
 	for rows.Next() {
 		var u User
@@ -60,7 +64,8 @@ func displayUserRows(rows *sql.Rows) {
 	}
 }
 
-func resetUserTable(db *sql.DB) {
+// Reset User table
+func resetUserTable(db *sql.DB, table string) {
 	_, err := db.Exec("DROP TABLE IF EXISTS `USER`")
 	if err != nil {
 		log.Fatal(err)
@@ -72,6 +77,7 @@ func resetUserTable(db *sql.DB) {
 	}
 }
 
+// Create a new room and add creator to the new room
 func createNewRoom(db *sql.DB, value [4]string) {
 	//Convert to int
 	nbMaxPlayer, _ := strconv.Atoi(value[1])
@@ -91,6 +97,7 @@ func createNewRoom(db *sql.DB, value [4]string) {
 	}
 }
 
+// add player in a specifique room
 func addPlayer(db *sql.DB, value [2]int) {
 	if checkNbPlayer(db, value[0]) > getMaxPlayer(db, value[0]) {
 		log.Println("Party already full")
@@ -103,6 +110,7 @@ func addPlayer(db *sql.DB, value [2]int) {
 	}
 }
 
+// Increments player's score
 func UpdatePlayerScore(db *sql.DB, id_room int, id_user int, score int) {
 	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ? AND id_user = ?"
 	_, err := db.Exec(insertQuery, score, id_room, id_user)
@@ -111,6 +119,7 @@ func UpdatePlayerScore(db *sql.DB, id_room int, id_user int, score int) {
 	}
 }
 
+// return score for a specifique room user
 func GetPlayerScore(db *sql.DB, id_room int, id_user int) int {
 	var score int
 
@@ -122,6 +131,7 @@ func GetPlayerScore(db *sql.DB, id_room int, id_user int) int {
 	return score
 }
 
+// Check if room is not full
 func checkNbPlayer(db *sql.DB, id_room int) int {
 	var nbPLayer int
 	query := "SELECT COUNT(*) FROM ROOM_USERS WHERE id_room = ?"
@@ -132,6 +142,7 @@ func checkNbPlayer(db *sql.DB, id_room int) int {
 	return nbPLayer
 }
 
+// return max player of room
 func getMaxPlayer(db *sql.DB, id_room int) int {
 	var nbMaxPlayer int
 
@@ -143,6 +154,7 @@ func getMaxPlayer(db *sql.DB, id_room int) int {
 	return nbMaxPlayer
 }
 
+// return the creator of a specifique room
 func getRoomCreator(db *sql.DB, id_user int) int {
 	var idRoom int
 
@@ -154,17 +166,14 @@ func getRoomCreator(db *sql.DB, id_user int) int {
 	return idRoom
 }
 
-func CreateRoomTest(db *sql.DB) {
-	value := [4]string{"2", "4", "zfzef", "1"}
-	createNewRoom(db, value)
-}
-
+// return user information as User for a specifique id
 func GetUserById(db *sql.DB, id int) User {
 	var u User
 	db.QueryRow("SELECT * FROM `USER` WHERE id = ?", id).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
 }
 
+// get last room (current room) for a specifique user
 func GetCurrentRoomUser(db *sql.DB, idUser int) int {
 	var idRoom int
 

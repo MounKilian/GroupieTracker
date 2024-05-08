@@ -85,6 +85,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 			user = connectUser(db, valueConnect)
 			if user.pseudo == "" {
 				log.Println("ERROR : Wrong connection information")
+				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 			} else {
 				SetCookie(w, user)
 				http.Redirect(w, r, "/room", http.StatusFound)

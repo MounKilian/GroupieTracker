@@ -71,7 +71,7 @@ func Server() {
 		Formulaire(w, r)
 	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
-		room.broadcastMessage("data_" + room.letter)
+		room.broadcastMessage("data")
 		Scattegories(w, r, room.letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {

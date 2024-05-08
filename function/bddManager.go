@@ -170,7 +170,7 @@ func GetRoomByName(db *sql.DB, roomName string) (int, error) {
 
 	query := "SELECT id FROM ROOMS WHERE name =?"
 	err := db.QueryRow(query, roomName).Scan(&idRoom)
-	if err!= nil {
+	if err != nil {
 		return 0, err
 	}
 	return idRoom, nil

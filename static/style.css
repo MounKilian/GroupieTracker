@@ -1,14 +1,26 @@
+header {
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+.logo img {
+    max-width: 15%;
+    height: auto;
+}
+
 body {
     min-height: 100vh;
-    background: url(img/background.jpeg) center / cover;
+    background: url(img/background.png) center / cover;
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
+    flex-direction: column;
+    font-family: URW Chancery L, cursive;
+    /*overflow: hidden;*/
 }
 .container {
+    height: 90%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -17,12 +29,13 @@ body {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     width: 25%;
 }
 .containerDroit {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     width: 75%;
     justify-content: center;
 }
@@ -30,13 +43,12 @@ body {
     display: none;
 }
 .animateur {
-    margin-top: 200px;
     width: 80%;
     position: relative;
     align-self: center;
 }
 .animateur img {
-    max-width: 100%;
+    max-width: 85%;
     height: auto;
 }
 .canape {
@@ -44,30 +56,106 @@ body {
     position: relative;
     justify-content: center;
     align-self: center;
+    margin-right: 5vh;
 }
 .canape img {
     max-width: 100%;
     height: auto;
-    margin-top: -75px;
+    margin-top: -25px;
     justify-content: center;
     align-self: center;
 }
 .screen-container {
     height: 65%;
-    background-image: url('img/screenT.png');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 2px;
+    background-color: #f3e3ff;
+    border-radius: 10px;
+    display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 15vh;
+    margin-left: 10vh;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
+
+.button {
+    align-self: center;
+    background-color: #fff;
+    background-image: none;
+    background-position: 0 90%;
+    background-repeat: repeat no-repeat;
+    background-size: 4px 3px;
+    border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+    box-sizing: border-box;
+    color: #41403e;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Neucha, sans-serif;
+    font-size: 1rem;
+    line-height: 23px;
+    outline: none;
+    padding: 2%;
+    text-decoration: none;
+    transition: all 235ms ease-in-out;
+    border-bottom-left-radius: 15px 255px;
+    border-bottom-right-radius: 225px 15px;
+    border-top-left-radius: 255px 15px;
+    border-top-right-radius: 15px 225px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+.button:hover {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+    transform: translate3d(0, 2px, 0);
+}
+.button:focus {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
 .form-container {
-    margin: 7vh;
+    width: 50%;
+    margin: 3vh auto;
     background-color: rgba(240, 116, 255, 0.1);
-    border-radius: 1px;
-    /*box-shadow: 0 0 10px rgba(0,0,0,.5);*/
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container input[type="email"] {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px solid #ffdd00;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #7b5eab;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #65478e;
+}
+
 .container-onglets {
     width: 100%;
     height: 30%;
@@ -80,23 +168,26 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border-radius: 5px;
+
 }
 .onglet:not(:nth-child(2)) {
     border-right: 1px solid #333;
 }
 .content {
-    height: 70%;
-    width: 100%;
     display: none;
 }
 .active {
-    background-color: #6c00bd;
+    background-color: #7b5eab;
     color: #f1f1f1;
     transition: all 0.3s ease;
 }
-.activeContent {
-    display: block;
+.activeContent, #estart, #eslogin {
     animation: fade 0.5s forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 @keyframes fade {
     from {
@@ -106,25 +197,7 @@ body {
         opacity: 1;
     }
 }
-#pseudo, #password, #pseudoLogin, #passwordLogin ,#password2Login, #emailLogin{
-    width: 100%;
-    padding: 12px 50px;
-    box-sizing: border-box;
-    border: 2px solid #ffdd00;
-    border-radius: 5px;
-}
-.login-form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-#logo {
-    width: 300px;
-    height: auto;
-    display: flex;
-    justify-content: center;
-}
+
 @media (max-width: 768px) {
     .containerGauche,
     .containerDroit {
@@ -137,10 +210,11 @@ body {
         display: none;
     }
     .canape {
-        width: 100%;
+        width: auto;
     }
-    .television {
-        width: 100%;
+    .screen-container {
+        width: auto;
+        margin: 0;
     }
     .responsiveAnimateur {
         width: 100%;
@@ -159,12 +233,74 @@ body {
     .screen-container {
         padding-bottom: 15vh;
         padding-top: 15vh;
-        background-image: url('img/screenT.png');
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        border-radius: 2px;
+        background-color: #f3e3ff;
+        border-radius: 10px;
         justify-content: center;
         align-items: center;
+        margin: 0 5vh;
     }
+}
+
+/* ************************ROOM MANAGER*********************** */
+
+.join-container, .host-container {
+    width: 35%;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin: 5vh;
+    transition: transform 0.3s ease;
+}
+
+.join-container:hover, .host-container:hover {
+    transform: scale(1.05);
+}
+
+.joinLogo {
+    width: 20vh;
+    position: relative;
+    justify-content: center;
+    align-self: center;
+    padding-left: 3vh;
+    margin-top: 2vh;
+}
+.joinLogo img {
+    max-width: 100%;
+    height: auto;
+    justify-content: center;
+    align-self: center;
+}
+
+.hostLogo {
+    width: 26vh;
+    position: relative;
+    justify-content: center;
+    align-self: center;
+    padding-right: 3vh;
+}
+.hostLogo  img {
+    max-width: 100%;
+    height: auto;
+    justify-content: center;
+    align-self: center;
+}
+
+.logo-room {
+    font-size: 100px;
+}
+
+#roomID {
+    width: 75%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px solid #ffdd00;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
 }

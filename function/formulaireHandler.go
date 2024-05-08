@@ -2,6 +2,7 @@ package groupieTracker
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -92,14 +93,25 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func CheckDeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+func CheckDeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music, currentPlay int, nbPlay int) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 	if err := r.ParseForm(); err != nil {
 		log.Fatal(err)
 	}
 
-	musicName := r.FormValue("music-namen")
-	if musicName == currentMusic.name {
-		http.Redirect(w, r, "/", http.StatusFound)
+	musicName := r.FormValue("music-name")
+	if MatchTitle(currentMusic.name, musicName) {
+		fmt.Println("test")
+		userId := GetCoockie(w, r, "userId")
+		currentRoom := GetCurrentRoomUser(db, userId)
+		UpdatePlayerScore(db, currentRoom, userId, 10)
+	}
+	if currentPlay == nbPlay {
+		http.Redirect(w, r, "/deaftestwin", http.StatusFound)
 	}
 
 	http.Redirect(w, r, "/deaftest", http.StatusFound)

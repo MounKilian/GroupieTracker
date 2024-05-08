@@ -15,6 +15,7 @@ func Server() {
 	go room.Start()
 	var letter string
 	var currentMusic Music
+	var currentPlay int
 
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
@@ -36,11 +37,15 @@ func Server() {
 		Waiting(w, r)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
-		currentMusic = PlaylistConnect()
+		currentMusic = PlaylistConnect(1)
+		currentPlay++
 		DeafTest(w, r, currentMusic)
 	})
 	http.HandleFunc("/deaftestverif", func(w http.ResponseWriter, r *http.Request) {
-		CheckDeafTest(w, r, currentMusic)
+		CheckDeafTest(w, r, currentMusic, currentPlay, 1)
+	})
+	http.HandleFunc("/deaftestwin", func(w http.ResponseWriter, r *http.Request) {
+		DeaftestWin(w, r, currentMusic)
 	})
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)

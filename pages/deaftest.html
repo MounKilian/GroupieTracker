@@ -5,8 +5,8 @@
   </head>
   <body>
     <div class="container">
-      <p class="lyrics">{{ .name }}</p>
-      <form id="estart" method="post" action="/chechDeafTest">
+      <p class="lyrics">{{ . }}</p>
+      <form id="estart" method="post" action="/deaftestverif">
         <input required name="music-name" type="text" value="" placeholder="Music name"/>
         <button type="submit" form="estart" value="Submit">submit</button>
       </form>

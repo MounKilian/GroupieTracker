@@ -1,6 +1,7 @@
 package groupieTracker
 
 import (
+	"database/sql"
 	"html/template"
 	"log"
 	"net/http"
@@ -40,9 +41,26 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeafTest(w http.ResponseWriter, r *http.Request, currentMusic Music) {
-	template, err := template.ParseFiles("./pages/waiting.html")
+	template, err := template.ParseFiles("./pages/deaftest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, currentMusic)
+	template.Execute(w, currentMusic.lyrics)
+}
+
+func DeaftestWin(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	userId := GetCoockie(w, r, "userId")
+	currentRoom := GetCurrentRoomUser(db, userId)
+	score := GetPlayerScore(db, currentRoom, userId)
+
+	template, err := template.ParseFiles("./pages/deaftestwin.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, score)
 }

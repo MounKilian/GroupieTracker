@@ -2,6 +2,7 @@ package groupieTracker
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 
@@ -15,7 +16,7 @@ type Music struct {
 	lyrics string
 }
 
-func PlaylistConnect() Music {
+func PlaylistConnect(nbPlay int) Music {
 	authConfig := &clientcredentials.Config{
 		ClientID:     "2a8a0128c5aa4458b24fc07d90d76135",
 		ClientSecret: "c0d7e68a34b04b88ae577d71163ab073",
@@ -29,7 +30,7 @@ func PlaylistConnect() Music {
 
 	client := spotify.Authenticator{}.NewClient(accessToken)
 
-	playlistID := spotify.ID("2h7KHuoD0IfVNDeQDqTGIJ")
+	playlistID := spotify.ID("5tYg6pvAiwa3taoNAG3HzC")
 	playlist, err := client.GetPlaylist(playlistID)
 	if err != nil {
 		log.Fatalf("error retrieve playlist data: %v", err)
@@ -39,6 +40,8 @@ func PlaylistConnect() Music {
 	randomIndex := GetRandomMusicIndex(playlist)
 	currentMusic.name = playlist.Tracks.Tracks[randomIndex].Track.Name
 	currentMusic.lyrics = GetLyrics(&playlist.Tracks.Tracks[randomIndex].Track)
+	fmt.Println(currentMusic.name)
+
 	return currentMusic
 }
 
@@ -53,8 +56,8 @@ func GetLyrics(track *spotify.FullTrack) string {
 	for _, artist := range track.Artists {
 		artistName = artist.Name
 	}
-	l := lyrics.New()
-	lyric, err := l.Search(artistName, track.Name)
+	lyricApi := lyrics.New()
+	lyric, err := lyricApi.Search(artistName, track.Name)
 
 	if err != nil {
 		log.Println(err)

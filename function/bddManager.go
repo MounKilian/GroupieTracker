@@ -86,7 +86,7 @@ func createNewRoom(db *sql.DB, value [4]string) {
 			log.Fatal(err)
 		}
 
-		currentUserValue := [2]int{getRoomFromUser(db, created_by), created_by}
+		currentUserValue := [2]int{getRoomCreator(db, created_by), created_by}
 		addPlayer(db, currentUserValue)
 	}
 }
@@ -103,12 +103,23 @@ func addPlayer(db *sql.DB, value [2]int) {
 	}
 }
 
-func updatePlayerScore(db *sql.DB, id_room int, score User) {
-	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ?"
-	_, err := db.Exec(insertQuery, score, id_room)
+func UpdatePlayerScore(db *sql.DB, id_room int, id_user int, score int) {
+	insertQuery := "UPDATE ROOM_USERS SET score = ? WHERE id_room = ? AND id_user = ?"
+	_, err := db.Exec(insertQuery, score, id_room, id_user)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func GetPlayerScore(db *sql.DB, id_room int, id_user int) int {
+	var score int
+
+	query := "SELECT score FROM ROOM_USERS WHERE id_user = ? and id_room = ?"
+	err := db.QueryRow(query, id_user, id_room).Scan(&score)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return score
 }
 
 func checkNbPlayer(db *sql.DB, id_room int) int {
@@ -132,7 +143,7 @@ func getMaxPlayer(db *sql.DB, id_room int) int {
 	return nbMaxPlayer
 }
 
-func getRoomFromUser(db *sql.DB, id_user int) int {
+func getRoomCreator(db *sql.DB, id_user int) int {
 	var idRoom int
 
 	query := "SELECT id FROM ROOMS WHERE created_by = ?"
@@ -152,4 +163,15 @@ func GetUserById(db *sql.DB, id int) User {
 	var u User
 	db.QueryRow("SELECT * FROM `USER` WHERE id = ?", id).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
+}
+
+func GetCurrentRoomUser(db *sql.DB, idUser int) int {
+	var idRoom int
+
+	query := "SELECT id_room FROM ROOM_USERS WHERE id_user = ? ORDER BY id_room DESC LIMIT 1"
+	err := db.QueryRow(query, idUser).Scan(&idRoom)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return idRoom
 }

@@ -26,11 +26,15 @@
                             <td><input name="groupe-de-music" placeholder="Groupe de music" required></input></td>
                             <td><input name="instrument-de-music" placeholder="Instrument de music" required></input></td>
                             <td><input name="featuring" placeholder="Featuring" required></input></td>
+                            <button type="submit" form="scattegories" id="submit-btn">
+                                <p id="timer"></p>
+                                <input type="hidden" name="button-value" id="button-value" value="">
+                                <a href="/scattegoriesChecker">Submit</a>
+                            </button>
                         </form>
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" form="scattegories" value="Submit"><p id="timer"></p><a href="/scattegoriesChecker">Submit</a></button>
         </div>
         <script>
             let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -47,6 +51,11 @@
 
         </script>
         <script>
+            let btn = document.getElementById("submit-btn");
+            btn.addEventListener("click", function(){
+                let userId = getCookie("userId")
+                document.getElementById("button-value").value = userId;   
+            })
             let timerElement = document.getElementById("timer");
             let timeLeft = 60;
             let timerInterval = setInterval(function() {
@@ -57,6 +66,18 @@
                     document.getElementById("scattegories").submit();
                 }
             }, 1000);
+
+            function getCookie(name) {
+                const cookieName = "userId";
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(cookieName + '=')) {
+                    return cookie.substring(cookieName.length + 1);
+                    }
+                }
+                return null;
+            }
         </script>
     </body>
 </html> 

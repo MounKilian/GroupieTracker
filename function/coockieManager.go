@@ -28,7 +28,7 @@ func SetCookie(w http.ResponseWriter, user User) {
 		Value:    strconv.Itoa(user.id),
 		Path:     "/",
 		MaxAge:   3600,
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
 	}

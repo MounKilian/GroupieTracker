@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -74,8 +75,10 @@ func Server() {
 		Scattegories(w, r, room.letter)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
+		buttonValue := r.FormValue("button-value")
+		log.Println(buttonValue)
 		userid := GetCoockie(w, r, "userId")
-		if userid == 3 {
+		if strconv.Itoa(userid) == buttonValue {
 			if !state {
 				room.broadcastMessage("end")
 				state = true

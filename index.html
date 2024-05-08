@@ -4,13 +4,18 @@
         <title>Groupie caca</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./static/style.css">
+        <link rel="stylesheet" href="static/style.css">
     </head>
     <body>
+    <header>
+        <div class="logo">
+            <img src="./static/img/logo.png" alt="Logo">
+        </div>
+    </header>
         <div class="container">
             <div class="containerGauche">
                 <div class="animateur">
-                    <img src="./static/img/animateur.png" alt="Animateur">
+                    <img src="static/img/animateur.png" alt="Animateur">
                 </div>
             </div>
             <div class="containerDroit">
@@ -21,24 +26,24 @@
                         <div class="onglet" data-anim="2">Sign in</div>
                     </div>
                     <div class="content activeContent" data-anim="1">
+                        <br>
                         <form id="estart" method="post" action="/checkUser">
                             <input required name="connect-log" id="pseudo" type="text" value="" placeholder="Identifiant"/>
-                            <br><br>
+                            <br>
                             <input required name="password-log" id="password" type="password" value="" placeholder="Password"/>
-                            <br><br>
+                            <br>
+                            <br>
                             <button type="submit" form="estart" value="Submit">Start</button>
+                            <br>
                         </form>
                     </div>
                     <div class="content" data-anim="2">
                         <form id="eslogin" method="post" action="/checkUser">
                             <input required name="pseudo-sign" id="pseudoLogin" type="text" value="" placeholder="Pseudo"/>
-                            <br><br>
                             <input required name="email-sign" id="emailLogin" type="text" value="" placeholder="E-mail"/>
-                            <br><br>
                             <input required name="password-sign" id="passwordLogin" type="password" value="" placeholder="Password"/>
-                            <br><br>
                             <input required name="verify-password-sign" id="password2Login" type="password" value="" placeholder="Verification Password"/>
-                            <br><br>
+                            <br>
                             <form method="post" action="/checkUser">
                                 <button name="signin" type="signin">Singin</button>
                             </form>
@@ -47,25 +52,23 @@
                 </div>
                 </div>
                 <div class="canape">
-                    <img src="./static/img/canape.png" alt="Canapé">
+                    <img src="static/img/canape.png" alt="Canapé">
                 </div>
                 <div class="responsiveAnimateur">
-                    <img src="./static/img/responsiveAnimateur.png" alt="Animateur">
+                    <img src="static/img/responsiveAnimateur.png" alt="Animateur">
                 </div>
+            </div>
+            <div class="containerMilieu">
+
             </div>
         </div>
     </body>
-    <script src="./static/style.js"></script>
+    <script src="static/style.js"></script>
     <script>
-        let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+        let ws = new WebSocket("ws://10.70.1.85:8080/ws")
 
-        ws.onopen = function(){
-            console.log("Websocket open")
-        }
-
-        ws.onmessage = function(event){
-            console.log(event)
-
+        ws.onopen = function() {
+            console.log(`Connected to WebSocket server`)
         }
     </script>
 </html>

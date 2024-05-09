@@ -10,6 +10,7 @@ import (
 )
 
 type Question struct {
+	Id                int
 	Username          string
 	Artist            string
 	Album             string
@@ -31,6 +32,7 @@ func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	userId := GetCoockie(w, r, "userId")
 
 	var response Question
+	response.Id = userId
 	response.Username = GetUserById(db, userId).pseudo
 	response.Artist = r.FormValue("artist")
 	response.Album = r.FormValue("album")
@@ -148,4 +150,39 @@ func WaitingForm(w http.ResponseWriter, r *http.Request) (string, int) {
 
 	http.Redirect(w, r, "/deaftest", http.StatusFound)
 	return playlistID, nbSong
+}
+
+func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
+
+	for key, _ := range r.Form {
+		switch r.FormValue(key) {
+		case "true":
+			userId, err := strconv.Atoi(ExtractSuffix(key))
+			if err != nil {
+				log.Fatal(err)
+			}
+			currentRoom := GetCurrentRoomUser(db, userId)
+			UpdatePlayerScore(db, currentRoom, userId, 3)
+			break
+		case "same":
+			userId, err := strconv.Atoi(ExtractSuffix(key))
+			if err != nil {
+				log.Fatal(err)
+			}
+			currentRoom := GetCurrentRoomUser(db, userId)
+			UpdatePlayerScore(db, currentRoom, userId, 1)
+			break
+		}
+	}
+
+	http.Redirect(w, r, "/", http.StatusFound)
 }

@@ -115,3 +115,8 @@ func TestPlaylist() {
 		}
 	}
 }
+
+func ExtractSuffix(s string) string {
+	parts := strings.Split(s, "-")
+	return parts[1]
+}

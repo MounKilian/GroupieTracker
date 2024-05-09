@@ -8,8 +8,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var question1 = Question{"Tom", "booba", "azd", "tezagaergst1", "teeragergest1", "test1"}
-var question2 = Question{"Kilian", "karis", "test2", "teszezeft2", "test2", "testergerg2"}
+var question1 = Question{2, "Tom", "booba", "azd", "tezagaergst1", "teeragergest1", "test1"}
+var question2 = Question{1, "Kilian", "karis", "test2", "teszezeft2", "test2", "testergerg2"}
 var questions = []Question{question1, question2}
 
 type Deaftest struct {
@@ -40,6 +40,9 @@ func Server() {
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
 		ScattegoriesVerification(w, r, questions)
+	})
+	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {
+		ScattegoriesVerificationChecker(w, r)
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		Waiting(w, r)

@@ -8,7 +8,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var questions = []Question{}
+var question1 = Question{"Tom", "test1", "test1", "test1", "test1", "test1"}
+var question2 = Question{"Kilian", "test2", "test2", "test2", "test2", "test2"}
+var questions = []Question{question1, question2}
 
 type Deaftest struct {
 	gender       string
@@ -37,7 +39,7 @@ func Server() {
 		fmt.Println(questions)
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
-		ScattegoriesVerification(w, r, questions[0])
+		ScattegoriesVerification(w, r, questions)
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		Waiting(w, r)

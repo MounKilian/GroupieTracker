@@ -27,15 +27,15 @@ func Waiting(w http.ResponseWriter, r *http.Request) {
 
 // Scattegories pages
 func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
-	template, err := template.ParseFiles("./pages/scategories/scattegories.html")
+	template, err := template.ParseFiles("./pages/scattegories/scattegories.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 	template.Execute(w, letter)
 }
 
-func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Question) {
-	template, err := template.ParseFiles("./pages/scategories/verification.html")
+func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Question) {
+	template, err := template.ParseFiles("./pages/scattegories/verification.html")
 	if err != nil {
 		log.Fatal(err)
 	}

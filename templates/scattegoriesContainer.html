@@ -1,0 +1,50 @@
+{{ define "reponse-container"}}
+{{ range $index, $question :=. }}
+			<div class="question-container">
+				<div class="container">
+					<div class="question" id="question-0">
+						<p>{{$question.Username}} : {{$question.Artist}}</p>
+						<button class="button" name="artist" value="true">Vrai</button>
+						<button class="button-false" name="artist" value="false">Faux</button>
+						<button class="button-same" name="artist" value="Same">Same</button>
+					</div>
+				</div>
+
+				<div class="container" style="display: none;">
+					<div class="question" id="question-1">
+						<p>{{$question.Username}} : {{$question.Album}}</p>
+						<button class="button" name="album" value="true">Vrai</button>
+						<button class="button-false" name="album" value="false">Faux</button>
+						<button class="button-same" name="album" value="Same">Same</button>
+					</div>
+				</div>
+				
+				<div class="container" style="display: none;">
+					<div class="question" id="question-2">
+						<p>{{$question.Username}} : {{$question.GroupeDeMusic}}</p>
+						<button class="button" name="groupe" value="true">Vrai</button>
+						<button class="button-false" name="groupe" value="false">Faux</button>
+						<button class="button-same" name="groupe" value="Same">Same</button>
+					</div>
+				</div>
+				
+				<div class="container" style="display: none;">
+					<div class="question" id="question-3">
+						<p>{{$question.Username}} : {{$question.InstrumentDeMusic}}</p>
+						<button class="button" name="instrument" value="true">Vrai</button>
+						<button class="button-false" name="instrument" value="false">Faux</button>
+						<button class="button-same" name="instrument" value="Same">Same</button>
+					</div>
+				</div>
+				
+				<div class="container" style="display: none;">
+					<div class="question" id="question-4">
+						<p>{{$question.Username}} : {{$question.Featuring}}</p>
+						<button class="button" name="featuring" value="true">Vrai</button>
+						<button class="button-false" name="featuring" value="false">Faux</button>
+						<button class="button-same" name="featuring" value="false">Same</button>
+					</div>
+				</div>
+			</div>
+{{end}}
+{{end}}

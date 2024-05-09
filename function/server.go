@@ -8,8 +8,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var question1 = Question{"Tom", "test1", "test1", "test1", "test1", "test1"}
-var question2 = Question{"Kilian", "test2", "test2", "test2", "test2", "test2"}
+var question1 = Question{"Tom", "booba", "azd", "tezagaergst1", "teeragergest1", "test1"}
+var question2 = Question{"Kilian", "karis", "test2", "teszezeft2", "test2", "testergerg2"}
 var questions = []Question{question1, question2}
 
 type Deaftest struct {

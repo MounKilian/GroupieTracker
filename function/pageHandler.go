@@ -35,7 +35,7 @@ func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
 }
 
 func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Question) {
-	template, err := template.ParseFiles("./pages/scattegories/verification.html")
+	template, err := template.ParseFiles("./pages/scattegories/verification.html", "./templates/scattegoriesContainer.html")
 	if err != nil {
 		log.Fatal(err)
 	}

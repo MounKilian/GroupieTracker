@@ -24,6 +24,10 @@ func Server() {
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 	http.ListenAndServe(":8080", nil)
+
+	http.HandleFunc("/blindtest", func(w http.ResponseWriter, r *http.Request) {
+		Blindtest()
+	})
 }
 
 type Room struct {

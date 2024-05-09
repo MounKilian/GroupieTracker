@@ -4,13 +4,25 @@ import (
 	"context"
 	"log"
 	"math/rand"
-	"net/http"
 
+	lyrics "github.com/rhnvrm/lyric-api-go"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-func SpotifyAPI(w http.ResponseWriter, r *http.Request) {
+type Music struct {
+	name   string
+	lyrics string
+}
+
+type Btest struct {
+	name       string
+	PreviewURL string
+}
+
+// Use spotify API and connect to a specific playlist
+func PlaylistConnect(genderPlaylist string) spotify.FullTrack {
+
 	authConfig := &clientcredentials.Config{
 		ClientID:     "2a8a0128c5aa4458b24fc07d90d76135",
 		ClientSecret: "c0d7e68a34b04b88ae577d71163ab073",
@@ -19,26 +31,55 @@ func SpotifyAPI(w http.ResponseWriter, r *http.Request) {
 
 	accessToken, err := authConfig.Token(context.Background())
 	if err != nil {
-		http.Error(w, "error retrieve access token", http.StatusInternalServerError)
 		log.Fatalf("error retrieve access token: %v", err)
-		return
 	}
 
 	client := spotify.Authenticator{}.NewClient(accessToken)
-
-	playlistID := spotify.ID("7lIjK7AbxSFO0kB9NctldT")
+	playlistID := spotify.ID(genderPlaylist)
 	playlist, err := client.GetPlaylist(playlistID)
 	if err != nil {
-		http.Error(w, "error retrieve playlist data", http.StatusInternalServerError)
 		log.Fatalf("error retrieve playlist data: %v", err)
-		return
 	}
 
-	randTrack := rand.Intn(playlist.Tracks.Total)
+	var currentMusic Music
+	randomIndex := GetRandomMusicIndex(playlist)
+	currentMusic.name = playlist.Tracks.Tracks[randomIndex].Track.Name
+	currentMusic.lyrics = GetLyrics(&playlist.Tracks.Tracks[randomIndex].Track)
 
-	log.Println("playlist id:", playlist.ID)
-	log.Println("playlist name:", playlist.Name)
-	log.Println("playlist lenght:", playlist.Tracks.Total)
-	log.Println("playlist track:", playlist.Tracks.Tracks[randTrack].Track)
-	log.Println("playlist track:", playlist.Tracks.Tracks[randTrack].Track.PreviewURL)
+	return playlist.Tracks.Tracks[randomIndex].Track
+}
+
+func BlindtestManager(genderPlaylist string) Btest {
+	randomBtest := PlaylistConnect(genderPlaylist)
+
+	var currentBtest Btest
+	currentBtest.name = randomBtest.Name
+	currentBtest.PreviewURL = randomBtest.PreviewURL
+
+	return currentBtest
+}
+
+// Select a random music index from the playlist
+func GetRandomMusicIndex(playlist *spotify.FullPlaylist) int {
+	maxIndex := playlist.Tracks.Total
+	trackIndex := rand.Intn(maxIndex-1) + 1
+	return trackIndex
+}
+
+func GetPreviewURL(track *spotify.FullTrack) string {
+	return track.PreviewURL
+}
+
+// Find music's lyrics using multiple API
+func GetLyrics(track *spotify.FullTrack) string {
+	var artistName string
+	for _, artist := range track.Artists {
+		artistName = artist.Name
+	}
+	lyricApi := lyrics.New()
+	lyric, err := lyricApi.Search(artistName, track.Name)
+	if err != nil {
+		log.Println(err)
+	}
+	return lyric
 }

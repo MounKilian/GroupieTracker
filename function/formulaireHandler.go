@@ -64,7 +64,6 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 
 			if verifyPassword != password && VerifyPassword(password) {
 				log.Println("ERROR : Incorrect password")
-				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 			} else {
 				createUser(db, valueCreate)
 				valueConnect := [2]string{pseudo, passwordEncrypt}

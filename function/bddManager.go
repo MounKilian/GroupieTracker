@@ -175,3 +175,22 @@ func GetRoomByName(db *sql.DB, roomName string) (int, error) {
 	}
 	return idRoom, nil
 }
+
+func getUsersInRoom(db *sql.DB, roomName string) ([]string, error) {
+	var users []string
+	query := "SELECT u.pseudo FROM ROOM_USERS ru JOIN USER u ON ru.id_user = u.id WHERE ru.id_room = (SELECT id FROM ROOMS WHERE name = $1)"
+	rows, err := db.Query(query, roomName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var pseudo string
+		err := rows.Scan(&pseudo)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, pseudo)
+	}
+	return users, nil
+}

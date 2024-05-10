@@ -78,11 +78,12 @@ func Server() {
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
 		buttonValue := r.FormValue("button-value")
+		code := GetCoockieCode(w, r, "code")
 		log.Println(buttonValue)
 		userid := GetCoockie(w, r, "userId")
 		if strconv.Itoa(userid) == buttonValue {
 			if !state {
-				room.broadcastMessage("end")
+				room.broadcastMessage("end_" + code)
 				state = true
 				response := ScattegoriesForm(w, r)
 				questions = append(questions, response)
@@ -107,9 +108,10 @@ func Server() {
 	})
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
 		if game == "scattegories" {
+			code := GetCoockieCode(w, r, "code")
 			room.letter = selectRandomLetter()
 			room.broadcastMessage(room.letter)
-			room.broadcastMessage("data")
+			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if game == "blindTest" {
 			http.Redirect(w, r, "/room", http.StatusFound)

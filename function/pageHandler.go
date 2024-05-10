@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"net/url"
 	"strconv"
 )
 
@@ -63,73 +62,94 @@ func RoomStart(w http.ResponseWriter, r *http.Request) {
 func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
 	responseJoin := r.FormValue("join")
 	userid := GetCoockie(w, r, "userId")
+	code := GetCoockieCode(w, r, "code")
+	var newInfo Info
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	IDroom, err := GetRoomByName(db, responseJoin)
-	if err != nil {
-		log.Fatal(err)
-	}
-	values := [2]int{IDroom, userid}
-	addPlayer(db, values)
-	user := GetUserById(db, userid)
-	pseudo := user.pseudo
-	for _, i := range infos.Pseudo {
-		if i == pseudo {
-			refresh = false
+	if code == "" {
+		user := GetUserById(db, userid)
+		IDroom, err := GetRoomByName(db, responseJoin)
+		if err != nil {
+			log.Fatal(err)
 		}
-	}
-	if refresh {
-		infos.Pseudo = append(infos.Pseudo, pseudo)
-		infos = Info{responseJoin, infos.Pseudo}
+		values := [2]int{IDroom, userid}
+		addPlayer(db, values)
+		users, err := getUsersInRoom(db, responseJoin)
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, i := range users {
+			newInfo.Pseudo = append(newInfo.Pseudo, i)
+		}
+		SetCookieCode(w, user, responseJoin)
+		newInfo = Info{responseJoin, newInfo.Pseudo}
 		room.broadcastMessage("newUser")
+	} else {
+		users, err := getUsersInRoom(db, code)
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, i := range users {
+			newInfo.Pseudo = append(newInfo.Pseudo, i)
+		}
+		newInfo = Info{code, newInfo.Pseudo}
 	}
-	refresh = true
 	template, err := template.ParseFiles("./pages/waitingInvit.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, infos)
+	template.Execute(w, newInfo)
 }
 
 func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 	userid := GetCoockie(w, r, "userId")
+	code := GetCoockieCode(w, r, "code")
 	db, err := sql.Open("sqlite3", "BDD.db")
+	var newInfo Info
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	access := RandomString()
-	url.QueryEscape(access)
-	var value [4]string
-	if game == "scattegories" {
-		value = [4]string{strconv.Itoa(userid), "6", access, "3"}
-	} else if game == "blindTest" {
-		value = [4]string{strconv.Itoa(userid), "6", access, "1"}
-	} else {
-		value = [4]string{strconv.Itoa(userid), "6", access, "2"}
-	}
-	createNewRoom(db, value)
-	user := GetUserById(db, userid)
-	pseudo := user.pseudo
-	for _, i := range infos.Pseudo {
-		if i == pseudo {
-			refresh = false
+	if code == "" {
+		infos.Pseudo = []string{}
+		newInfo.Pseudo = []string{}
+		user := GetUserById(db, userid)
+		pseudo := user.pseudo
+		access := RandomString()
+		SetCookieCode(w, user, access)
+		var value [4]string
+		if game == "scattegories" {
+			value = [4]string{strconv.Itoa(userid), "6", access, "3"}
+		} else if game == "blindTest" {
+			value = [4]string{strconv.Itoa(userid), "6", access, "1"}
+		} else {
+			value = [4]string{strconv.Itoa(userid), "6", access, "2"}
 		}
-	}
-	if refresh {
+		createNewRoom(db, value)
 		infos.Pseudo = append(infos.Pseudo, pseudo)
 		infos = Info{access, infos.Pseudo}
-		room.broadcastMessage("newUser")
+		newInfo.Pseudo = append(infos.Pseudo, pseudo)
+		newInfo = Info{access, infos.Pseudo}
+	} else {
+		newInfo.Pseudo = []string{}
+		users, err := getUsersInRoom(db, code)
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, i := range users {
+			newInfo.Pseudo = append(newInfo.Pseudo, i)
+		}
+		newInfo = Info{code, newInfo.Pseudo}
+		log.Println(infos.Pseudo)
 	}
-	refresh = true
 	template, err := template.ParseFiles("./pages/waiting.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, infos)
+	template.Execute(w, newInfo)
 }
 
 func StartGame(w http.ResponseWriter, r *http.Request) {

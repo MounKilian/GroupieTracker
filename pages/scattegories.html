@@ -43,11 +43,13 @@
             }
     
             ws.onmessage = function(event){
-                if (event.data === "end"){
-                    document.getElementById("scattegories").submit()
+                if (event.data.startsWith("end")){
+                    let code = getCookie("code")
+                    if (event.data.includes(code)){
+                        document.getElementById("scattegories").submit()
+                    }
                 }
             }
-
         </script>
         <script>
             let btn = document.getElementById("submit-btn");

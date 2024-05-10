@@ -22,10 +22,39 @@ func GetCoockie(w http.ResponseWriter, r *http.Request, name string) int {
 	return userId
 }
 
+func GetCoockieCode(w http.ResponseWriter, r *http.Request, name string) string {
+	cookie, err := r.Cookie(name)
+	if err != nil {
+		switch {
+		case errors.Is(err, http.ErrNoCookie):
+			return ""
+		default:
+			log.Println(err)
+			http.Error(w, "server error", http.StatusInternalServerError)
+		}
+	}
+	code := cookie.Value
+	return code
+}
+
 func SetCookie(w http.ResponseWriter, user User) {
 	cookie := http.Cookie{
 		Name:     "userId",
 		Value:    strconv.Itoa(user.id),
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: false,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+}
+
+func SetCookieCode(w http.ResponseWriter, user User, code string) {
+	cookie := http.Cookie{
+		Name:     "code",
+		Value:    code,
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: false,

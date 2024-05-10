@@ -84,7 +84,7 @@ func RoomStart(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, nil)
+	template.Execute(w, game)
 }
 
 func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
@@ -177,11 +177,19 @@ func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 		newInfo = Info{code, newInfo.Pseudo}
 		log.Println(infos.Pseudo)
 	}
-	template, err := template.ParseFiles("./pages/waiting.html")
-	if err != nil {
-		log.Fatal(err)
+	if game == "scattegories" {
+		template, err := template.ParseFiles("./pages/waiting.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, newInfo)
+	} else {
+		template, err := template.ParseFiles("./pages/waitingDeafTest.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, newInfo)
 	}
-	template.Execute(w, newInfo)
 }
 
 func StartGame(w http.ResponseWriter, r *http.Request) {

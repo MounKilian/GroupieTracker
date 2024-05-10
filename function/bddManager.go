@@ -65,7 +65,7 @@ func displayUserRows(rows *sql.Rows) {
 }
 
 // Reset User table
-func resetUserTable(db *sql.DB, table string) {
+func resetUserTable(db *sql.DB) {
 	_, err := db.Exec("DROP TABLE IF EXISTS `USER`")
 	if err != nil {
 		log.Fatal(err)
@@ -183,6 +183,7 @@ func GetUserById(db *sql.DB, id int) User {
 	db.QueryRow("SELECT * FROM `USER` WHERE id = ?", id).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
 }
+
 // get last room (current room) for a specifique user
 func GetCurrentRoomUser(db *sql.DB, idUser int) int {
 	var idRoom int
@@ -194,7 +195,6 @@ func GetCurrentRoomUser(db *sql.DB, idUser int) int {
 	}
 	return idRoom
 }
-
 
 func GetRoomByName(db *sql.DB, roomName string) (int, error) {
 	var idRoom int

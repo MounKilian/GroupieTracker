@@ -56,7 +56,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	for key, _ := range r.Form {
+	for key := range r.Form {
 		if key == "pseudo-sign" {
 			pseudo := r.FormValue("pseudo-sign")
 			email := r.FormValue("email-sign")
@@ -164,7 +164,7 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	for key, _ := range r.Form {
+	for key := range r.Form {
 		switch r.FormValue(key) {
 		case "true":
 			userId, err := strconv.Atoi(ExtractSuffix(key))

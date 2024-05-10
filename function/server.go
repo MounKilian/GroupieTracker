@@ -11,8 +11,6 @@ import (
 
 var questions = []Question{}
 var questionsMap map[string][]Question
-var question1 = Question{2, "Tom", "booba", "azd", "tezagaergst1", "teeragergest1", "test1"}
-var question2 = Question{1, "Kilian", "karis", "test2", "teszezeft2", "test2", "testergerg2"}
 
 var state = false
 
@@ -94,7 +92,6 @@ func Server() {
 		questions := questionsMap[code]
 		log.Println("hello")
 		if strconv.Itoa(userid) == buttonValue {
-			log.Println("1")
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)
@@ -121,12 +118,24 @@ func Server() {
 		RoomStart(w, r)
 	})
 	http.HandleFunc("/waitingChecker", func(w http.ResponseWriter, r *http.Request) {
-		Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
+		http.Redirect(w, r, "/deaftest", http.StatusFound)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
-		Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
-		Deaftest.currentPlay++
-		DeafTest(w, r, Deaftest)
+		// db, err := sql.Open("sqlite3", "BDD.db")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// defer db.Close()
+		// userid := GetCoockie(w, r, "userId")
+		// code := GetCoockieCode(w, r, "code")
+		// roomId, err := GetRoomByName(db, code)
+		// if userid == GetCrteatedPlayer(db, roomId) {
+		// 	Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+		// 	Deaftest.currentPlay++
+		// 	DeafTest(w, r, Deaftest)
+		// } else {
+		// 	DeafTest(w, r, Deaftest)
+		// }
 	})
 	http.HandleFunc("/deaftestChecker", func(w http.ResponseWriter, r *http.Request) {
 		DeafForm(w, r, Deaftest)
@@ -135,16 +144,19 @@ func Server() {
 		Win(w, r, Deaftest.currentMusic)
 	})
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
 		if game == "scattegories" {
-			code := GetCoockieCode(w, r, "code")
 			room.letter = selectRandomLetter()
-			room.broadcastMessage(room.letter)
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if game == "blindTest" {
 			http.Redirect(w, r, "/room", http.StatusFound)
-		} else {
-			http.Redirect(w, r, "/room", http.StatusFound)
+		} else if game == "deafTest" {
+			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
+			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+			Deaftest.currentPlay++
+			code := GetCoockieCode(w, r, "code")
+			room.broadcastMessage("deaf_" + code)
 		}
 	})
 	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {

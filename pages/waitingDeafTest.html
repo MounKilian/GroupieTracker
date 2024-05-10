@@ -5,9 +5,13 @@
 	<link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
+    <h1>Code de jeu : {{.Code}}</h1>
+        {{range $val := .Pseudo}}
+            <p value="{{$val}}">{{$val}}</p><br>
+        {{end}}
 	<div id="player">
 		<h1>Music Player</h1>
-        <form id="waiting" method="post" action="/waitingChecker">
+        <form id="waiting" method="post" action="/startPlaying">
             <select name="gender" id="music-style" required>
                 <option value="rock">Rock</option>
                 <option value="pop">Pop</option>
@@ -27,6 +31,18 @@
 	</div>
 
 	<script>
+        let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+        ws.onopen = function(){
+            console.log("Websocket open")
+        }
+
+        ws.onmessage = function(event){
+            if (event.data == "newUser"){
+                window.location.href = "/waiting"
+            }
+        }
+
         function validateMaxPlayers() {
             var maxPlayers = document.getElementById('max-players').value;
             var errorMessage = document.getElementById('error-message');

@@ -26,6 +26,12 @@
                     window.location.href = "/scattegories"
                 }
             }
+            if (event.data.startsWith("deaf")){
+                let code = getCookie("code")
+                if (event.data.includes(code)){
+                    window.location.href = "/deaftest"
+                }
+            }
             if (event.data == "newUser"){
                 window.location.href = "/waitingInvit"
             }

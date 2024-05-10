@@ -46,7 +46,10 @@
                 if (event.data.startsWith("end_")){
                     let code = getCookie("code")
                     if (event.data.includes(code)){
-                        document.getElementById("scattegories").submit()
+                        let userid = getCookie("userId")
+                        if (!event.data.includes(userid)){
+                            document.getElementById("scattegories").submit()
+                        }
                     }
                 }
             }

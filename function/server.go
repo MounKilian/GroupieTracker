@@ -1,7 +1,6 @@
 package groupieTracker
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 )
 
 var questions = []Question{}
+var questionsMap map[string][]Question
 
 var state = false
 
@@ -65,6 +65,7 @@ func (room *Room) broadcastMessage(message string) {
 func Server() {
 	room := NewRoom()
 	go room.Start()
+	questionsMap = make(map[string][]Question)
 
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
@@ -80,23 +81,24 @@ func Server() {
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
+		questions := questionsMap[code]
+		log.Println("hello")
 		if strconv.Itoa(userid) == buttonValue {
-			if !state {
-				room.broadcastMessage("end_" + code)
-				state = true
-				response := ScattegoriesForm(w, r)
-				questions = append(questions, response)
-				fmt.Println(questions)
-			} else {
-				ScattegoriesForm(w, r)
-			}
+			log.Println("1")
+			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
+			response := ScattegoriesForm(w, r)
+			questions = append(questions, response)
+			questionsMap[code] = questions
 		} else {
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)
-			fmt.Println(questions)
+			questionsMap[code] = questions
 		}
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
+		questions := questionsMap[code]
+		log.Println(questions)
 		ScattegoriesVerification(w, r, questions[0])
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {

@@ -79,7 +79,6 @@ func Server() {
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
-		log.Println(buttonValue)
 		userid := GetCoockie(w, r, "userId")
 		if strconv.Itoa(userid) == buttonValue {
 			if !state {

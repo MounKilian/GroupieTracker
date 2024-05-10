@@ -43,16 +43,17 @@
             }
     
             ws.onmessage = function(event){
-                if (event.data.startsWith("end")){
+                if (event.data.startsWith("end_")){
                     let code = getCookie("code")
                     if (event.data.includes(code)){
                         document.getElementById("scattegories").submit()
                     }
                 }
             }
+
         </script>
         <script>
-            let btn = document.getElementById("submit-btn");
+            let btn = document.getElementById("submit-btn")
             btn.addEventListener("click", function(){
                 let userId = getCookie("userId")
                 document.getElementById("button-value").value = userId   
@@ -69,7 +70,7 @@
             }, 1000);
 
             function getCookie(name) {
-                const cookieName = "userId";
+                const cookieName = name;
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     const cookie = cookies[i].trim();

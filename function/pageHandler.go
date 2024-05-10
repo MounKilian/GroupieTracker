@@ -72,21 +72,25 @@ func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
 	if code == "" {
 		user := GetUserById(db, userid)
 		IDroom, err := GetRoomByName(db, responseJoin)
-		if err != nil {
-			log.Fatal(err)
+		if IDroom == 0 {
+			http.Redirect(w, r, "/room", http.StatusFound)
+		} else {
+			if err != nil {
+				log.Fatal(err)
+			}
+			values := [2]int{IDroom, userid}
+			addPlayer(db, values)
+			users, err := getUsersInRoom(db, responseJoin)
+			if err != nil {
+				log.Fatal(err)
+			}
+			for _, i := range users {
+				newInfo.Pseudo = append(newInfo.Pseudo, i)
+			}
+			SetCookieCode(w, user, responseJoin)
+			newInfo = Info{responseJoin, newInfo.Pseudo}
+			room.broadcastMessage("newUser")
 		}
-		values := [2]int{IDroom, userid}
-		addPlayer(db, values)
-		users, err := getUsersInRoom(db, responseJoin)
-		if err != nil {
-			log.Fatal(err)
-		}
-		for _, i := range users {
-			newInfo.Pseudo = append(newInfo.Pseudo, i)
-		}
-		SetCookieCode(w, user, responseJoin)
-		newInfo = Info{responseJoin, newInfo.Pseudo}
-		room.broadcastMessage("newUser")
 	} else {
 		users, err := getUsersInRoom(db, code)
 		if err != nil {

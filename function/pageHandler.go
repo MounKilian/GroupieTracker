@@ -14,6 +14,7 @@ type Info struct {
 	Pseudo []string
 }
 
+var game string
 var infos Info
 var refresh = true
 
@@ -33,6 +34,14 @@ func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
 	template.Execute(w, letter)
 }
 
+func LandingPage(w http.ResponseWriter, r *http.Request) {
+	template, err := template.ParseFiles("./pages/landingPage.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, nil)
+}
+
 func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Question) {
 	template, err := template.ParseFiles("./pages/sctVerification.html")
 	if err != nil {
@@ -42,6 +51,8 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Quest
 }
 
 func RoomStart(w http.ResponseWriter, r *http.Request) {
+	game = r.FormValue("game-value")
+	log.Println(game)
 	template, err := template.ParseFiles("./pages/room.html")
 	if err != nil {
 		log.Fatal(err)
@@ -92,7 +103,14 @@ func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 	defer db.Close()
 	access := RandomString()
 	url.QueryEscape(access)
-	value := [4]string{strconv.Itoa(userid), "6", access, "3"}
+	var value [4]string
+	if game == "scattegories" {
+		value = [4]string{strconv.Itoa(userid), "6", access, "3"}
+	} else if game == "blindTest" {
+		value = [4]string{strconv.Itoa(userid), "6", access, "1"}
+	} else {
+		value = [4]string{strconv.Itoa(userid), "6", access, "2"}
+	}
 	createNewRoom(db, value)
 	user := GetUserById(db, userid)
 	pseudo := user.pseudo

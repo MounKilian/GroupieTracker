@@ -70,6 +70,9 @@ func Server() {
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		Formulaire(w, r)
 	})
+	http.HandleFunc("/landingPage", func(w http.ResponseWriter, r *http.Request) {
+		LandingPage(w, r)
+	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
 		Scattegories(w, r, room.letter)
 	})
@@ -103,10 +106,16 @@ func Server() {
 		RoomStart(w, r)
 	})
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
-		room.letter = selectRandomLetter()
-		room.broadcastMessage(room.letter)
-		room.broadcastMessage("data")
-		http.Redirect(w, r, "/scattegories", http.StatusFound)
+		if game == "scattegories" {
+			room.letter = selectRandomLetter()
+			room.broadcastMessage(room.letter)
+			room.broadcastMessage("data")
+			http.Redirect(w, r, "/scattegories", http.StatusFound)
+		} else if game == "blindTest" {
+			http.Redirect(w, r, "/room", http.StatusFound)
+		} else {
+			http.Redirect(w, r, "/room", http.StatusFound)
+		}
 	})
 	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {
 		WaitingInvit(w, r, room)

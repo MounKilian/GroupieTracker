@@ -332,3 +332,33 @@ body {
     margin-top: 10px;
     margin-left: 35%;
 }
+
+/* style.css */
+.game-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-card {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.game-card:hover {
+    background-color: #f7f7f7;
+}
+
+.game-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.game-card h2 {
+    font-size: 18px;
+    margin-top: 0;
+}

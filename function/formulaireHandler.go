@@ -88,7 +88,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 			} else {
 				SetCookie(w, user)
-				http.Redirect(w, r, "/room", http.StatusFound)
+				http.Redirect(w, r, "/landingPage", http.StatusFound)
 			}
 		}
 	}

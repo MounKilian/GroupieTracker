@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// Get a coockie from a specifique coockie name
 func GetCoockie(w http.ResponseWriter, r *http.Request, name string) int {
 	cookie, err := r.Cookie(name)
 	if err != nil {
@@ -37,6 +38,7 @@ func GetCoockieCode(w http.ResponseWriter, r *http.Request, name string) string 
 	return code
 }
 
+// Set user id inside a coockie
 func SetCookie(w http.ResponseWriter, user User) {
 	cookie := http.Cookie{
 		Name:     "userId",

@@ -11,8 +11,17 @@ import (
 
 var questions = []Question{}
 var questionsMap map[string][]Question
+var question1 = Question{2, "Tom", "booba", "azd", "tezagaergst1", "teeragergest1", "test1"}
+var question2 = Question{1, "Kilian", "karis", "test2", "teszezeft2", "test2", "testergerg2"}
 
 var state = false
+
+type Deaftest struct {
+	gender       string
+	nbSong       int
+	currentMusic Music
+	currentPlay  int
+}
 
 type Room struct {
 	id         string
@@ -65,6 +74,7 @@ func (room *Room) broadcastMessage(message string) {
 func Server() {
 	room := NewRoom()
 	go room.Start()
+	var Deaftest Deaftest
 	questionsMap = make(map[string][]Question)
 
 	http.HandleFunc("/", Home)
@@ -99,13 +109,30 @@ func Server() {
 		code := GetCoockieCode(w, r, "code")
 		questions := questionsMap[code]
 		log.Println(questions)
-		ScattegoriesVerification(w, r, questions[0])
+		ScattegoriesVerification(w, r, questions)
+	})
+	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {
+		ScattegoriesVerificationChecker(w, r)
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		Waiting(w, r, room)
 	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
 		RoomStart(w, r)
+	})
+	http.HandleFunc("/waitingChecker", func(w http.ResponseWriter, r *http.Request) {
+		Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
+	})
+	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
+		Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+		Deaftest.currentPlay++
+		DeafTest(w, r, Deaftest)
+	})
+	http.HandleFunc("/deaftestChecker", func(w http.ResponseWriter, r *http.Request) {
+		DeafForm(w, r, Deaftest)
+	})
+	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
+		Win(w, r, Deaftest.currentMusic)
 	})
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
 		if game == "scattegories" {

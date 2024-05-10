@@ -17,6 +17,7 @@ var game string
 var infos Info
 var refresh = true
 
+// main pages
 func Home(w http.ResponseWriter, r *http.Request) {
 	template, err := template.ParseFiles("./index.html")
 	if err != nil {
@@ -25,8 +26,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	template.Execute(w, nil)
 }
 
+// Scattegories pages
 func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
-	template, err := template.ParseFiles("./pages/scattegories.html")
+	template, err := template.ParseFiles("./pages/scattegories/scattegories.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,12 +43,38 @@ func LandingPage(w http.ResponseWriter, r *http.Request) {
 	template.Execute(w, nil)
 }
 
-func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data Question) {
-	template, err := template.ParseFiles("./pages/sctVerification.html")
+func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Question) {
+	template, err := template.ParseFiles("./pages/scattegories/verification.html", "./templates/scattegoriesContainer.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 	template.Execute(w, data)
+}
+
+// Deaftest pages
+func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
+	template, err := template.ParseFiles("./pages/deaftest.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, Deaftest.currentMusic.lyrics)
+}
+
+func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	userId := GetCoockie(w, r, "userId")
+	currentRoom := GetCurrentRoomUser(db, userId)
+	score := GetPlayerScore(db, currentRoom, userId)
+
+	template, err := template.ParseFiles("./pages/win.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, score)
 }
 
 func RoomStart(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +107,7 @@ func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
 				log.Fatal(err)
 			}
 			values := [2]int{IDroom, userid}
-			addPlayer(db, values)
+			AddPlayer(db, values)
 			users, err := getUsersInRoom(db, responseJoin)
 			if err != nil {
 				log.Fatal(err)

@@ -7,11 +7,14 @@
     {{.}}
     <div class="container">
       <form id="deaftest" method="post" action="/sendData">
-        <button type="submit" form="deaftest" value="Submit">Submit</button>
+        <button id="button" type="submit" form="deaftest" value="Submit">Submit</button>
       </form>
     </div>
   </body>
   <script>
+    let btn = document.getElementById('button')
+    btn.style.display = "none"
+
     let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
 
     ws.onopen = function(){
@@ -20,10 +23,13 @@
 
     ws.onmessage = function(event){
       if (event.data.startsWith("deaf")){
-          let code = getCookie("code")
-          if (event.data.includes(code)){
-              window.location.href = "/deaftest"
-          }
+        let code = getCookie("code")
+        if (event.data.includes(code)){
+            window.location.href = "/deaftest"
+        }
+      }
+      if (event.data == getCookie("userId")){
+        btn.style.display = "block"
       }
     }
 

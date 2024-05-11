@@ -113,7 +113,6 @@ func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 		UpdatePlayerScore(db, currentRoom, userId, 10)
 	}
 	if Deaftest.currentPlay == Deaftest.nbSong {
-		Deaftest.currentPlay = 0
 		http.Redirect(w, r, "/win", http.StatusFound)
 	}
 

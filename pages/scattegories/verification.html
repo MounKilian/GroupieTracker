@@ -76,6 +76,16 @@
 		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(3)">Next</button>
 		<button style="display: none;" class="button-next" type="submit" form="scattegories-verification" value="Submit">Submit</button>
 		<script>
+			let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+			ws.onopen = function(){
+				console.log("Websocket open")
+			}
+
+			ws.onmessage = function(event){
+				console.log(event)
+			}
+
             function nextQuestion(currentIndex) {
 				var container = document.querySelectorAll('.container');
 				var button = document.querySelectorAll('.button-next');

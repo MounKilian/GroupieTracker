@@ -1,6 +1,7 @@
 package groupieTracker
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,12 +14,14 @@ var questions = []Question{}
 var questionsMap map[string][]Question
 
 var state = false
+var players = 0
 
 type Deaftest struct {
 	gender       string
 	nbSong       int
 	currentMusic Music
 	currentPlay  int
+	nbPlayer     int
 }
 
 type Room struct {
@@ -117,25 +120,32 @@ func Server() {
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
 		RoomStart(w, r)
 	})
-	http.HandleFunc("/waitingChecker", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/deaftest", http.StatusFound)
+	http.HandleFunc("/sendData", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
+		room.broadcastMessage("deaf_" + code)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
-		// db, err := sql.Open("sqlite3", "BDD.db")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// defer db.Close()
-		// userid := GetCoockie(w, r, "userId")
-		// code := GetCoockieCode(w, r, "code")
-		// roomId, err := GetRoomByName(db, code)
-		// if userid == GetCrteatedPlayer(db, roomId) {
-		// 	Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
-		// 	Deaftest.currentPlay++
-		// 	DeafTest(w, r, Deaftest)
-		// } else {
-		// 	DeafTest(w, r, Deaftest)
-		// }
+		players++
+		if players == 1 {
+			Deaftest.currentPlay++
+		} else if players == 2 {
+			players = 0
+		}
+		DeafTest(w, r, Deaftest)
+	})
+	http.HandleFunc("/deaftestround", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("sqlite3", "BDD.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+		userid := GetCoockie(w, r, "userId")
+		code := GetCoockieCode(w, r, "code")
+		roomID, _ := GetRoomByName(db, code)
+		if userid == GetCrteatedPlayer(db, roomID) {
+			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+		}
+		DeafTestRound(w, r, Deaftest)
 	})
 	http.HandleFunc("/deaftestChecker", func(w http.ResponseWriter, r *http.Request) {
 		DeafForm(w, r, Deaftest)
@@ -154,8 +164,7 @@ func Server() {
 		} else if game == "deafTest" {
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
-			Deaftest.currentPlay++
-			code := GetCoockieCode(w, r, "code")
+			// Deaftest.currentPlay++
 			room.broadcastMessage("deaf_" + code)
 		}
 	})

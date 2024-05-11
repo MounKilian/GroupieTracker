@@ -53,11 +53,27 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Que
 
 // Deaftest pages
 func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
-	template, err := template.ParseFiles("./pages/deaftest.html")
+	template, err := template.ParseFiles("./pages/deaftest/deaftest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 	template.Execute(w, Deaftest.currentMusic.lyrics)
+}
+
+func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	userId := GetCoockie(w, r, "userId")
+	currentRoom := GetCurrentRoomUser(db, userId)
+	score := GetPlayerScore(db, currentRoom, userId)
+	template, err := template.ParseFiles("./pages/deaftest/deaftestround.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, score)
 }
 
 func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
@@ -70,7 +86,7 @@ func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
 	currentRoom := GetCurrentRoomUser(db, userId)
 	score := GetPlayerScore(db, currentRoom, userId)
 
-	template, err := template.ParseFiles("./pages/win.html")
+	template, err := template.ParseFiles("./pages/deaftest/win.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -178,13 +194,13 @@ func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 		log.Println(infos.Pseudo)
 	}
 	if game == "scattegories" {
-		template, err := template.ParseFiles("./pages/waiting.html")
+		template, err := template.ParseFiles("./pages/scattegories/waiting.html")
 		if err != nil {
 			log.Fatal(err)
 		}
 		template.Execute(w, newInfo)
 	} else {
-		template, err := template.ParseFiles("./pages/waitingDeafTest.html")
+		template, err := template.ParseFiles("./pages/deaftest/waitingDeafTest.html")
 		if err != nil {
 			log.Fatal(err)
 		}

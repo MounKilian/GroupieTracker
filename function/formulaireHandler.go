@@ -112,12 +112,13 @@ func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
 		currentRoom := GetCurrentRoomUser(db, userId)
 		UpdatePlayerScore(db, currentRoom, userId, 10)
 	}
+	log.Println(Deaftest.currentPlay)
 	if Deaftest.currentPlay == Deaftest.nbSong {
 		Deaftest.currentPlay = 0
 		http.Redirect(w, r, "/win", http.StatusFound)
 	}
 
-	http.Redirect(w, r, "/deaftest", http.StatusFound)
+	http.Redirect(w, r, "/deaftestround", http.StatusFound)
 }
 
 func WaitingForm(w http.ResponseWriter, r *http.Request) (string, int) {

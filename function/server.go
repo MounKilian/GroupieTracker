@@ -128,6 +128,9 @@ func Server() {
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
 		Waiting(w, r, room)
 	})
+	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
+		Win(w, r)
+	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
 		RoomStart(w, r, room)
 	})

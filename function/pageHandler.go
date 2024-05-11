@@ -220,3 +220,20 @@ func Waiting(w http.ResponseWriter, r *http.Request, room *Room) {
 func StartGame(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/verification", http.StatusFound)
 }
+
+func Win(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	userId := GetCoockie(w, r, "userId")
+	currentRoom := GetCurrentRoomUser(db, userId)
+	playersScore := GetUsersScoreInRoom(db, currentRoom)
+
+	template, err := template.ParseFiles("./pages/win.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, playersScore)
+}

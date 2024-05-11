@@ -184,5 +184,5 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/win", http.StatusFound)
 }

@@ -17,8 +17,8 @@ type User struct {
 }
 
 type Scoreboard struct {
-	user  string
-	score int
+	User  string
+	Score int
 }
 
 func selectFromTable(db *sql.DB, table string) *sql.Rows {
@@ -231,16 +231,6 @@ func getUsersInRoom(db *sql.DB, roomName string) ([]string, error) {
 	return users, nil
 }
 
-func GetCurrentRoomUser(db *sql.DB, idUser int) int {
-	var idRoom int
-	query := "SELECT id_room FROM ROOM_USERS WHERE id_user = ? ORDER BY id_room DESC LIMIT 1"
-	err := db.QueryRow(query, idUser).Scan(&idRoom)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return idRoom
-}
-
 func GetUsersScoreInRoom(db *sql.DB, id_room int) []Scoreboard {
 	var scoreboard []Scoreboard
 
@@ -254,11 +244,11 @@ func GetUsersScoreInRoom(db *sql.DB, id_room int) []Scoreboard {
 		var s Scoreboard
 		var id int
 
-		err := rows.Scan(&id, &s.score)
+		err := rows.Scan(&id, &s.Score)
 		if err != nil {
 			log.Fatal(err)
 		}
-		s.user = GetUserById(db, id).pseudo
+		s.User = GetUserById(db, id).pseudo
 		scoreboard = append(scoreboard, s)
 	}
 	return scoreboard

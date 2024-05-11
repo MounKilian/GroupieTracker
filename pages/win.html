@@ -14,10 +14,17 @@
 		</tr>
 		{{range $index, $element := .}}
 		<tr>
-			<td>{{$element.user}}</td>
-			<td>{{$element.score}}</td>
+			<td>{{$element.User}}</td>
+			<td>{{$element.Score}}</td>
 		</tr>
 		{{end}}
 	</table>
 </body>
+<script>
+	let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+	ws.onopen = function(){
+		console.log("Websocket open")
+	}
+</script>
 </html>

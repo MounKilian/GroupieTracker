@@ -85,23 +85,6 @@ func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	}
 }
 
-func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
-	db, err := sql.Open("sqlite3", "BDD.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	userId := GetCoockie(w, r, "userId")
-	currentRoom := GetCurrentRoomUser(db, userId)
-	score := GetPlayerScore(db, currentRoom, userId)
-
-	template, err := template.ParseFiles("./pages/deaftest/win.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	template.Execute(w, score)
-}
-
 func RoomStart(w http.ResponseWriter, r *http.Request, room *Room) {
 	game = r.FormValue("game-value")
 	room.game = game

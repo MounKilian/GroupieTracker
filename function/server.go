@@ -191,9 +191,6 @@ func Server() {
 	http.HandleFunc("/deaftestChecker", func(w http.ResponseWriter, r *http.Request) {
 		DeafForm(w, r, Deaftest)
 	})
-	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {
-		Win(w, r, Deaftest.currentMusic)
-	})
 	http.HandleFunc("/startPlaying", func(w http.ResponseWriter, r *http.Request) {
 		code := GetCoockieCode(w, r, "code")
 		db, err := sql.Open("sqlite3", "BDD.db")

@@ -46,6 +46,15 @@ func NewRoom() *Room {
 	}
 }
 
+func NewDeaf() *Deaftest {
+	return &Deaftest{
+		gender:      "",
+		nbSong:      0,
+		currentPlay: 0,
+		nbPlayer:    0,
+	}
+}
+
 func (room *Room) Start() {
 	for {
 		select {
@@ -75,7 +84,7 @@ func (room *Room) broadcastMessage(message string) {
 func Server() {
 	room := NewRoom()
 	go room.Start()
-	var Deaftest Deaftest
+	Deaftest := NewDeaf()
 	questionsMap = make(map[string][]Question)
 
 	http.HandleFunc("/", Home)
@@ -93,7 +102,6 @@ func Server() {
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
 		questions := questionsMap[code]
-		log.Println("hello")
 		if strconv.Itoa(userid) == buttonValue {
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
@@ -108,7 +116,6 @@ func Server() {
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
 		code := GetCoockieCode(w, r, "code")
 		questions := questionsMap[code]
-		log.Println(questions)
 		ScattegoriesVerification(w, r, questions)
 	})
 	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {
@@ -128,9 +135,11 @@ func Server() {
 		players++
 		if players == 1 {
 			Deaftest.currentPlay++
-		} else if players == 2 {
 			players = 0
 		}
+		// else if players == 2 {
+		// 	players = 0
+		// }
 		DeafTest(w, r, Deaftest)
 	})
 	http.HandleFunc("/deaftestround", func(w http.ResponseWriter, r *http.Request) {
@@ -164,7 +173,6 @@ func Server() {
 		} else if game == "deafTest" {
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
-			// Deaftest.currentPlay++
 			room.broadcastMessage("deaf_" + code)
 		}
 	})

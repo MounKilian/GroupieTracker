@@ -52,7 +52,7 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Que
 }
 
 // Deaftest pages
-func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
+func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	template, err := template.ParseFiles("./pages/deaftest/deaftest.html")
 	if err != nil {
 		log.Fatal(err)
@@ -60,7 +60,7 @@ func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
 	template.Execute(w, Deaftest.currentMusic.lyrics)
 }
 
-func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
+func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)

@@ -96,7 +96,7 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
+func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {
 		log.Fatal(err)
@@ -112,7 +112,6 @@ func DeafForm(w http.ResponseWriter, r *http.Request, Deaftest Deaftest) {
 		currentRoom := GetCurrentRoomUser(db, userId)
 		UpdatePlayerScore(db, currentRoom, userId, 10)
 	}
-	log.Println(Deaftest.currentPlay)
 	if Deaftest.currentPlay == Deaftest.nbSong {
 		Deaftest.currentPlay = 0
 		http.Redirect(w, r, "/win", http.StatusFound)

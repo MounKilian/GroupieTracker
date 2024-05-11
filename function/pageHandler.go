@@ -69,11 +69,20 @@ func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	userId := GetCoockie(w, r, "userId")
 	currentRoom := GetCurrentRoomUser(db, userId)
 	score := GetPlayerScore(db, currentRoom, userId)
-	template, err := template.ParseFiles("./pages/deaftest/deaftestround.html")
-	if err != nil {
-		log.Fatal(err)
+	if Deaftest.finish == true {
+		Deaftest.finish = false
+		template, err := template.ParseFiles("./pages/deaftest/deaftestroundCreator.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, score)
+	} else {
+		template, err := template.ParseFiles("./pages/deaftest/deaftestround.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, score)
 	}
-	template.Execute(w, score)
 }
 
 func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
@@ -93,9 +102,9 @@ func Win(w http.ResponseWriter, r *http.Request, currentMusic Music) {
 	template.Execute(w, score)
 }
 
-func RoomStart(w http.ResponseWriter, r *http.Request) {
+func RoomStart(w http.ResponseWriter, r *http.Request, room *Room) {
 	game = r.FormValue("game-value")
-	log.Println(game)
+	room.game = game
 	template, err := template.ParseFiles("./pages/room.html")
 	if err != nil {
 		log.Fatal(err)

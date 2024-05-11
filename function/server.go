@@ -15,6 +15,7 @@ var questionsMap map[string][]Question
 
 var state = false
 var players = 0
+var last = 0
 
 type Deaftest struct {
 	gender       string
@@ -22,6 +23,7 @@ type Deaftest struct {
 	currentMusic Music
 	currentPlay  int
 	nbPlayer     int
+	finish       bool
 }
 
 type Room struct {
@@ -31,6 +33,7 @@ type Room struct {
 	unregister chan *websocket.Conn
 	mu         sync.RWMutex
 	letter     string
+	game       string
 }
 
 var upgrader = websocket.Upgrader{
@@ -52,6 +55,7 @@ func NewDeaf() *Deaftest {
 		nbSong:      0,
 		currentPlay: 0,
 		nbPlayer:    0,
+		finish:      false,
 	}
 }
 
@@ -125,7 +129,7 @@ func Server() {
 		Waiting(w, r, room)
 	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
-		RoomStart(w, r)
+		RoomStart(w, r, room)
 	})
 	http.HandleFunc("/sendData", func(w http.ResponseWriter, r *http.Request) {
 		code := GetCoockieCode(w, r, "code")
@@ -159,9 +163,25 @@ func Server() {
 		if userid == GetCrteatedPlayer(db, roomID) {
 			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
 		}
-		if players+1 == 1 {
-			roomCreator := GetCrteatedPlayer(db, roomID)
-			room.broadcastMessage(strconv.Itoa(roomCreator))
+		last++
+		if Deaftest.nbPlayer == 1 {
+			if last == 1 {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					Deaftest.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				last = 0
+			}
+		} else {
+			if last == Deaftest.nbPlayer {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					Deaftest.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				last = 0
+			}
 		}
 		DeafTestRound(w, r, Deaftest)
 	})
@@ -179,13 +199,13 @@ func Server() {
 		}
 		defer db.Close()
 		roomId, err := GetRoomByName(db, code)
-		if game == "scattegories" {
+		if room.game == "scattegories" {
 			room.letter = selectRandomLetter()
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
-		} else if game == "blindTest" {
+		} else if room.game == "blindTest" {
 			http.Redirect(w, r, "/room", http.StatusFound)
-		} else if game == "deafTest" {
+		} else if room.game == "deafTest" {
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentPlay = 0
 			nbrsUsers := checkNbPlayer(db, roomId)

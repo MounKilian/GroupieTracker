@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie caca</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+	<table>
+		<tr>
+			<th>User</th>
+			<th>Score</th>
+		</tr>
+		{{range $index, $element := .}}
+		<tr>
+			<td>{{$element.user}}</td>
+			<td>{{$element.score}}</td>
+		</tr>
+		{{end}}
+	</table>
+</body>
+</html>

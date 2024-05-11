@@ -16,6 +16,11 @@ type User struct {
 	password string
 }
 
+type Scoreboard struct {
+	user  string
+	score int
+}
+
 func selectFromTable(db *sql.DB, table string) *sql.Rows {
 	query := "SELECT * FROM " + table
 	result, _ := db.Query(query)
@@ -193,4 +198,37 @@ func getUsersInRoom(db *sql.DB, roomName string) ([]string, error) {
 		users = append(users, pseudo)
 	}
 	return users, nil
+}
+
+func GetCurrentRoomUser(db *sql.DB, idUser int) int {
+	var idRoom int
+	query := "SELECT id_room FROM ROOM_USERS WHERE id_user = ? ORDER BY id_room DESC LIMIT 1"
+	err := db.QueryRow(query, idUser).Scan(&idRoom)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return idRoom
+}
+
+func GetUsersScoreInRoom(db *sql.DB, id_room int) []Scoreboard {
+	var scoreboard []Scoreboard
+
+	query := "SELECT id_user, score FROM ROOM_USERS WHERE id_room = ?"
+	rows, err := db.Query(query, id_room)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var s Scoreboard
+		var id int
+
+		err := rows.Scan(&id, &s.score)
+		if err != nil {
+			log.Fatal(err)
+		}
+		s.user = GetUserById(db, id).pseudo
+		scoreboard = append(scoreboard, s)
+	}
+	return scoreboard
 }

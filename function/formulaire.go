@@ -2,8 +2,11 @@ package groupieTracker
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	"unicode"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -83,4 +86,58 @@ func VerifyPassword(s string) bool {
 		}
 	}
 	return hasNumber && hasUpperCase && hasLowercase && hasSpecial
+}
+
+func BlindForm(w http.ResponseWriter, r *http.Request, Blindtest Blindtest) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
+	musicName := r.FormValue("music-name")
+	if MatchTitle(Blindtest.currentBtest.name, musicName) {
+	}
+	if Blindtest.currentPlay == Blindtest.nbSong {
+		Blindtest.currentPlay = 0
+		http.Redirect(w, r, "/win", http.StatusFound)
+	}
+	http.Redirect(w, r, "/blindtest", http.StatusFound)
+}
+
+func MatchTitle(title, input string) bool {
+	if strings.Contains(title, " - ") {
+		if index := strings.Index(title, " - "); index != -1 {
+			title = title[:index]
+		} else {
+			title = ""
+		}
+	} else if strings.Contains(title, " (") {
+		if index := strings.Index(title, " ("); index != -1 {
+			title = title[:index]
+		} else {
+			title = ""
+		}
+	}
+	if strings.ToLower(title) == strings.ToLower(input) {
+		return true
+	}
+	return false
+}
+
+func GetCoockie(w http.ResponseWriter, r *http.Request, name string) int {
+	cookie, err := r.Cookie(name)
+	if err != nil {
+		switch {
+		case errors.Is(err, http.ErrNoCookie):
+			http.Error(w, "cookie not found", http.StatusBadRequest)
+		default:
+			log.Println(err)
+			http.Error(w, "server error", http.StatusInternalServerError)
+		}
+	}
+	userId, _ := strconv.Atoi(cookie.Value)
+	return userId
 }

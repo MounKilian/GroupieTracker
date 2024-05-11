@@ -15,10 +15,10 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 // Blindtest pages
-func Blindtest(w http.ResponseWriter, r *http.Request, Blindtest Blindtest) {
-	template, err := template.ParseFiles("./pages/deaftest.html")
+func BlindTest(w http.ResponseWriter, r *http.Request, Blindtest Blindtest) {
+	template, err := template.ParseFiles("./pages/blindtest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, Blindtest.currentMusic.lyrics)
+	template.Execute(w, Blindtest.currentBtest.PreviewURL)
 }

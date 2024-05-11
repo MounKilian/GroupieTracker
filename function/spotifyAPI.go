@@ -5,7 +5,6 @@ import (
 	"log"
 	"math/rand"
 
-	lyrics "github.com/rhnvrm/lyric-api-go"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
 )
@@ -44,7 +43,6 @@ func PlaylistConnect(genderPlaylist string) spotify.FullTrack {
 	var currentMusic Music
 	randomIndex := GetRandomMusicIndex(playlist)
 	currentMusic.name = playlist.Tracks.Tracks[randomIndex].Track.Name
-	currentMusic.lyrics = GetLyrics(&playlist.Tracks.Tracks[randomIndex].Track)
 
 	return playlist.Tracks.Tracks[randomIndex].Track
 }
@@ -68,18 +66,4 @@ func GetRandomMusicIndex(playlist *spotify.FullPlaylist) int {
 
 func GetPreviewURL(track *spotify.FullTrack) string {
 	return track.PreviewURL
-}
-
-// Find music's lyrics using multiple API
-func GetLyrics(track *spotify.FullTrack) string {
-	var artistName string
-	for _, artist := range track.Artists {
-		artistName = artist.Name
-	}
-	lyricApi := lyrics.New()
-	lyric, err := lyricApi.Search(artistName, track.Name)
-	if err != nil {
-		log.Println(err)
-	}
-	return lyric
 }

@@ -8,10 +8,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type Blindtest struct {
+	gender       string
+	nbSong       int
+	currentBtest Btest
+	currentPlay  int
+}
+
 func Server() {
 	room := NewRoom()
 	go room.Start()
 	var currentUser User
+	var Blindtest Blindtest
 
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
@@ -21,13 +29,21 @@ func Server() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)
 	})
+
+	http.HandleFunc("/blindtest", func(w http.ResponseWriter, r *http.Request) {
+		Blindtest.gender, Blindtest.nbSong = "6EyNHMMJtumWbxWpWN5AJW", 5
+		Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
+		BlindTest(w, r, Blindtest)
+	})
+
+	http.HandleFunc("/blindtestverif", func(w http.ResponseWriter, r *http.Request) {
+		BlindForm(w, r, Blindtest)
+	})
+
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 	http.ListenAndServe(":8080", nil)
 
-	http.HandleFunc("/blindtest", func(w http.ResponseWriter, r *http.Request) {
-		Blindtest()
-	})
 }
 
 type Room struct {

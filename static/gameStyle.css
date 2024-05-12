@@ -21,7 +21,7 @@ header {
     margin: 1vh;
 }
 .logo img {
-    max-width: 12%;
+    max-width: 10%;
     height: auto;
 }
 
@@ -31,7 +31,7 @@ header {
     align-items: center;
     justify-content: center;
 }
-#deaftest {
+#deaftest, #blindtest {
     display: flex;
     flex-direction: column;
     align-items: center;

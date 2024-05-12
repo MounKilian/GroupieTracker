@@ -1,5 +1,5 @@
 header {
-    height: 10%;
+    height: 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -11,7 +11,7 @@ header {
 
 }
 .logo img {
-    max-width: 15%;
+    max-width: 8%;
     height: auto;
 }
 

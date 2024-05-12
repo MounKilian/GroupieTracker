@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="./static/style.css">
+    <link rel="stylesheet" type="text/css" href="./static/gameStyle.css">
   </head>
   <body>
+  <header>
+      <div class="logo">
+          <img src="../static/img/logo.png" alt="Logo">
+      </div>
+  </header>
     <div class="container">
-        <audio autoplay controls>
+        <audio id="Audio" autoplay controls>
             <source src={{.}} type="audio/mpeg">
         </audio>  
         <p id="timer"></p>
       <form id="blindtest" method="post" action="/blindtestverif">
-        <input required name="music-name" type="text" value="" placeholder="Music name"/>
-        <button type="submit" form="blindtest" value="Submit">submit</button>
+        <input class="input" required name="music-name" type="text" value="" placeholder="Music name"/>
+        <button class="button" type="submit" form="blindtest" value="Submit">submit</button>
       </form>
     </div>
   </body>
@@ -23,7 +28,7 @@
     }
 
     let timerElement = document.getElementById("timer");
-    let timeLeft = 60;
+    let timeLeft = 30;
     let timerInterval = setInterval(function() {
         timerElement.textContent = `Time left: ${timeLeft} seconds`;
         timeLeft--;
@@ -32,5 +37,9 @@
             document.getElementById("blindtest").submit();
         }
     }, 1000);
+
+    var audio = document.getElementById("Audio");
+    audio.removeAttribute("controls");
+    audio.style.display = "none";
 </script>
 </html>

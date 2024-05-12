@@ -1,53 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Groupie caca</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./static/style.css">
-    </head>
-    <body>
-        <h1>Code de jeu : {{.Code}}</h1>
-        {{range $val := .Pseudo}}
+<head>
+    <title>Groupie caca</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="./static/img/logo.png" alt="Logo">
+    </div>
+</header>
+<div class="container">
+    <div class="containerGauche">
+        <div class="animateur">
+            <img src="static/img/animateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerDroit">
+        <div class="screen-container">
+            <div class="code-container">
+                <button class="button-code" type="button" onclick="" value="Submit">{{.Code}}</button>
+            </div>
+            {{range $val := .Pseudo}}
             <p value="{{$val}}">{{$val}}</p><br>
-        {{end}}
-    </body>
-    <script>
-        let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+            {{end}}
+        </div>
+        <div class="canape">
+            <img src="static/img/canape.png" alt="Canapé">
+        </div>
+        <div class="responsiveAnimateur">
+            <img src="static/img/responsiveAnimateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerMilieu">
 
-        ws.onopen = function(){
-            console.log("Websocket open")
+    </div>
+</div>
+</body>
+<script>
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+    ws.onmessage = function(event) {
+        if (event.data.startsWith("data")){
+            let code = getCookie("code")
+            if (event.data.includes(code)){
+                window.location.href = "/scattegories"
+            }
         }
-
-        ws.onmessage = function(event) {
-            if (event.data.startsWith("data")){
-                let code = getCookie("code")
-                if (event.data.includes(code)){
-                    window.location.href = "/scattegories"
-                }
-            }
-            if (event.data.startsWith("deaf")){
-                let code = getCookie("code")
-                if (event.data.includes(code)){
-                    window.location.href = "/deaftest"
-                }
-            }
-            if (event.data == "newUser"){
-                window.location.href = "/waitingInvit"
+        if (event.data.startsWith("deaf")){
+            let code = getCookie("code")
+            if (event.data.includes(code)){
+                window.location.href = "/deaftest"
             }
         }
-
-        function getCookie(name) {
-                const cookieName = name;
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.startsWith(cookieName + '=')) {
-                    return cookie.substring(cookieName.length + 1);
-                    }
-                }
-                return null;
+        if (event.data == "newUser"){
+            window.location.href = "/waitingInvit"
+        }
+    }
+    function getCookie(name) {
+        const cookieName = name;
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '=')) {
+                return cookie.substring(cookieName.length + 1);
             }
-    </script>
-    
+        }
+        return null;
+    }
+</script>
 </html>

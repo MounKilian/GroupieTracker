@@ -4,6 +4,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    background-color: #7b5eab;
+    border-radius: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+
 }
 .logo img {
     max-width: 15%;
@@ -17,7 +22,6 @@ body {
     margin: 0;
     flex-direction: column;
     font-family: URW Chancery L, cursive;
-    /*overflow: hidden;*/
 }
 .container {
     height: 90%;
@@ -25,7 +29,7 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
 }
-.containerGauche {
+.containerLeft {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -33,7 +37,7 @@ body {
     align-items: center;
     width: 25%;
 }
-.containerDroit {
+.containerRight {
     display: flex;
     flex-direction: column;
     width: 75%;
@@ -293,7 +297,7 @@ body {
 }
 /* ************************DEAFTEST ROOM*********************** */
 
-.screen-container-gauche  {
+.screen-container-left  {
     width: 35%;
     background-color: #7b5eab;
     border-radius: 5px;
@@ -308,7 +312,7 @@ body {
     transition: transform 0.3s ease;
 }
 
-.screen-container-gauche:hover {
+.screen-container-left:hover {
     transform: scale(1.05);
 }
 
@@ -453,4 +457,8 @@ body {
         align-items: center;
         margin: 0 5vh;
     }
+}
+
+h2 {
+    color: #fff;
 }

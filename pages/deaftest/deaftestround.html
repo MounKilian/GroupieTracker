@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="./static/style.css">
+    <link rel="stylesheet" type="text/css" href="./static/gameStyle.css">
   </head>
   <body>
-    {{.}}
+    <header>
+      <div class="logo">
+          <img src="../static/img/logo.png" alt="Logo">
+      </div>
+  </header>
     <div class="container">
+      <div class="score"> 
+      <p>score :</p> {{.}}
+      </div>
       <form id="deaftest" method="post" action="/sendData">
-        <button id="button" type="submit" form="deaftest" value="Submit">Submit</button>
+        <button class="button" id="button" type="submit" form="deaftest" value="Submit">Submit</button>
       </form>
     </div>
   </body>

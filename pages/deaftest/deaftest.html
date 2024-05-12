@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="./static/style.css">
+    <link rel="stylesheet" type="text/css" href="./static/gameStyle.css">
   </head>
   <body>
+    <header>
+      <div class="logo">
+          <img src="../static/img/logo.png" alt="Logo">
+      </div>
+  </header>
     <div class="container">
       <p id="timer"></p>
+      <dic class="prompteur">
       <p class="lyrics">{{ . }}</p>
+    </div>
       <form id="deaftest" method="post" action="/deaftestChecker">
-        <input required name="music-name" type="text" value="" placeholder="Music name"/>
+        <input class="input" required name="music-name" type="text" value="" placeholder="Music name"/>
       </form>
-      <button type="submit" form="deaftest" value="Submit">Submit</button>
+      <button class="button" type="submit" form="deaftest" value="Submit">Submit</button>
     </div>
   </body>
   <script>

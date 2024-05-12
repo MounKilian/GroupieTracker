@@ -19,13 +19,16 @@
         </div>
     </div>
     <div class="containerRight">
-        <div class="screen-container">
+        <div class="screen-container-left">
             <br>
             <div class="code-container">
-                <button class="button-code" type="button" onclick="" value="Submit">{{.Code}}</button>
+                <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
             </div>
+            <br>
             {{range $val := .Pseudo}}
-            <p value="{{$val}}">{{$val}}</p><br>
+            <div class="pseudo-container">
+            <p value="{{$val}}">{{$val}}</p>
+            </div>
             {{end}}
         </div>
         <div class="canape">
@@ -73,5 +76,14 @@
         }
         return null;
     }
+
+    document.getElementById("codeButton").addEventListener("click", function() {
+    var codeText = this.textContent || this.innerText;
+    navigator.clipboard.writeText(codeText).then(function() {
+        console.log("Code copied to clipboard");
+    }, function(err) {
+        console.error("Failed to copy code: ", err);
+    });
+    });
 </script>
 </html>

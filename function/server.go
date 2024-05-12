@@ -265,8 +265,6 @@ func Server() {
 		BlindTest(w, r, Blindtest)
 	})
 	http.HandleFunc("/blindtestverif", func(w http.ResponseWriter, r *http.Request) {
-		// Blindtest.nbSong--
-		// Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
 		BlindForm(w, r, Blindtest)
 	})
 	http.HandleFunc("/blindtestround", func(w http.ResponseWriter, r *http.Request) {

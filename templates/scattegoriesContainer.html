@@ -1,77 +1,21 @@
 {{ define "reponse-container"}}
 <form id="scattegories-verification" method="POST" action="/verificationChecker">
     {{ range $index, $question :=. }}
+    {{ range $key, $reponse := $question.Reponse }}
     <div class="question-container">
         <div class="container">
-            <div class="question" id="question-0">
-                <p>{{$question.Username}} : {{$question.Artist}}</p>
-                <input type="radio" id="artist-true" name="artist-{{$question.Id}}" value="true">
-                <label for="artist-{{$question.Id}}">Vrai</label>
+            <div class="question" id="{{ $index }}">
+                <p>{{$question.Username}} : {{key $question.reponse $key}}</p>
+                <input type="radio" id="true" name="{{$question.Id}}" value="true">
+                <label for="{{$question.Id}}">Vrai</label>
 
-                <input type="radio" id="artist-false" name="artist-{{$question.Id}}" value="false">
-                <label for="artist-{{$question.Id}}">Faux</label>
+                <input type="radio" id="false" name="{{$question.Id}}" value="false">
+                <label for="{{$question.Id}}">Faux</label>
 
-                <input type="radio" id="artist-same" name="artist-{{$question.Id}}" value="Same">
-                <label for="artist-{{$question.Id}}">Same</label>
+                <input type="radio" id="same" name="{{$question.Id}}" value="Same">
+                <label for="{{$question.Id}}">Same</label>
             </div>
         </div>
-
-        <div class="container" style="display: none;">
-            <div class="question" id="question-1">
-                <p>{{$question.Username}} : {{$question.Album}}</p>
-                <input type="radio" id="album-true" name="album-{{$question.Id}}" value="true">
-                <label for="album-{{$question.Id}}">Vrai</label>
-
-                <input type="radio" id="album-false" name="album-{{$question.Id}}" value="false">
-                <label for="album-{{$question.Id}}">Faux</label>
-
-                <input type="radio" id="album-same" name="album-{{$question.Id}}" value="Same">
-                <label for="album-{{$question.Id}}">Same</label>
-            </div>
-        </div>
-
-        <div class="container" style="display: none;">
-            <div class="question" id="question-2">
-                <p>{{$question.Username}} : {{$question.GroupeDeMusic}}</p>
-                <input type="radio" id="groupe-true" name="groupe-{{$question.Id}}" value="true">
-                <label for="groupe-{{$question.Id}}">Vrai</label>
-
-                <input type="radio" id="groupe-false" name="groupe-{{$question.Id}}" value="false">
-                <label for="groupe-{{$question.Id}}">Faux</label>
-
-                <input type="radio" id="groupe-same" name="groupe-{{$question.Id}}" value="Same">
-                <label for="groupe-{{$question.Id}}">Same</label>
-            </div>
-        </div>
-
-        <div class="container" style="display: none;">
-            <div class="question" id="question-3">
-                <p>{{$question.Username}} : {{$question.InstrumentDeMusic}}</p>
-                <input type="radio" id="instrument-true" name="instrument-{{$question.Id}}" value="true">
-                <label for="instrument-{{$question.Id}}">Vrai</label>
-
-                <input type="radio" id="instrument-false" name="instrument-{{$question.Id}}" value="false">
-                <label for="instrument-{{$question.Id}}">Faux</label>
-
-                <input type="radio" id="instrument-same" name="instrument-{{$question.Id}}" value="Same">
-                <label for="instrument-{{$question.Id}}">Same</label>
-            </div>
-        </div>
-
-        <div class="container" style="display: none;">
-            <div class="question" id="question-4">
-                <p>{{$question.Username}} : {{$question.Featuring}}</p>
-                <input type="radio" id="featuring-true" name="featuring-{{$question.Id}}" value="true">
-                <label for="featuring-{{$question.Id}}">Vrai</label>
-
-                <input type="radio" id="featuring-false" name="featuring-{{$question.Id}}" value="false">
-                <label for="featuring-{{$question.Id}}">Faux</label>
-
-                <input type="radio" id="featuring-same" name="featuring-{{$question.Id}}" value="Same">
-                <label for="featuring-{{$question.Id}}">Same</label>
-            </div>
-        </div>
-    </div>
     {{ end }}
 </form>
 {{ end }}

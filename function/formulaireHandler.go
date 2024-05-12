@@ -11,13 +11,9 @@ import (
 )
 
 type Question struct {
-	Id                int
-	Username          string
-	Artist            string
-	Album             string
-	GroupeDeMusic     string
-	InstrumentDeMusic string
-	Featuring         string
+	Id       int
+	Username string
+	Reponse  map[string]string
 }
 
 func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
@@ -35,11 +31,11 @@ func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	var response Question
 	response.Id = userId
 	response.Username = GetUserById(db, userId).pseudo
-	response.Artist = r.FormValue("artist")
-	response.Album = r.FormValue("album")
-	response.GroupeDeMusic = r.FormValue("groupe-de-music")
-	response.InstrumentDeMusic = r.FormValue("instrument-de-music")
-	response.Featuring = r.FormValue("featuring")
+	for key := range r.Form {
+		if key != "userId" {
+			response.Reponse[key] = r.FormValue(key)
+		}
+	}
 
 	http.Redirect(w, r, "/verification", http.StatusFound)
 	return response
@@ -233,7 +229,7 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 	for key := range r.Form {
 		switch r.FormValue(key) {
 		case "true":
-			userId, err := strconv.Atoi(ExtractSuffix(key))
+			userId, err := strconv.Atoi(key)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -241,7 +237,7 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 			UpdatePlayerScore(db, currentRoom, userId, 3)
 			break
 		case "same":
-			userId, err := strconv.Atoi(ExtractSuffix(key))
+			userId, err := strconv.Atoi(key)
 			if err != nil {
 				log.Fatal(err)
 			}

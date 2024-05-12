@@ -19,11 +19,9 @@
                 <tbody>
                     <tr>
                         <form id="scattegories" method="post" action="/scattegoriesChecker">
-                            <td><input name="artist" placeholder="Artist" required></input></td>
-                            <td><input name="album" placeholder="Album" required></input></td>
-                            <td><input name="groupe-de-music" placeholder="Groupe de music" required></input></td>
-                            <td><input name="instrument-de-music" placeholder="Instrument de music" required></input></td>
-                            <td><input name="featuring" placeholder="Featuring" required></input></td>
+                            {{ range $index, $category := .Cattegories }}
+                                <td><input name="$category" placeholder="$category" required></input></td>
+                            {{ end }}
                             <button type="submit" form="scattegories" id="submit-btn">
                                 <input type="hidden" name="button-value" id="button-value" value="">
                                 <p>Submit</p>

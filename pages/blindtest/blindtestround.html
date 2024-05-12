@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
+  </head>
+  <body>
+    {{.}}
+    <div class="container">
+      <form id="blindtest" method="post" action="/sendDataBT">
+        <button id="button" type="submit" form="blindtest" value="Submit">Submit</button>
+      </form>
+    </div>
+  </body>
+  <script>
+    let btn = document.getElementById('button')
+    btn.style.display = "none"
+
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+
+    ws.onmessage = function(event){
+      if (event.data.startsWith("blind")){
+        let code = getCookie("code")
+        if (event.data.includes(code)){
+            window.location.href = "/blindtest"
+        }
+      }
+      if (event.data == getCookie("userId")){
+        btn.style.display = "block"
+      }
+    }
+
+    function getCookie(name) {
+        const cookieName = name;
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+            }
+        }
+        return null;
+    }
+</script>
+</html>

@@ -63,12 +63,15 @@
 	</head>
 	<body>
 		<h1 class="theme" style="display: block;"> Artist </h1>
-		<h1 class="theme" style="display: none;"> Album </h1>
-		<h1 class="theme" style="display: none;"> Groupe de music </h1>
-		<h1 class="theme" style="display: none;"> Instrument de music </h1>
-		<h1 class="theme" style="display: none;"> Featuring </h1>
+		{{ range $index, $category := .categorie.Cattegories }}
+			{{if eq $index 0}}
+				<h1 class="theme" style="display: block;"> {{ $category }} </h1>
+			{{else}}
+				<h1 class="theme" style="display: none;"> {{ $category }} </h1>
+			{{end}}
+		{{ end }}
 
-		{{template "reponse-container" .}}
+		{{template "reponse-container" .question}}
 
 		<button style="display: block;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(0)">Next</button>
 		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(1)">Next</button>

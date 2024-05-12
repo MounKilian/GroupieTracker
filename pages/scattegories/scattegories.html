@@ -6,16 +6,14 @@
         <link rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        {{.}}
+        {{ .Letter }}
         <div class="table-conteneur">
             <table id="heroes-table" class="table-scrollable">
                 <thead >
                     <tr>
-                        <th>Artist</th>
-                        <th>Album</th>
-                        <th>Groupe de music</th>
-                        <th>Instrument de music</th>
-                        <th>Featuring</th>
+                        {{ range $index, $category := .Cattegories }}
+                            <th>{{ $category }}</th>
+                        {{ end }}
                     </tr>
                 </thead>
                 <tbody>
@@ -27,9 +25,10 @@
                             <td><input name="instrument-de-music" placeholder="Instrument de music" required></input></td>
                             <td><input name="featuring" placeholder="Featuring" required></input></td>
                             <button type="submit" form="scattegories" id="submit-btn">
-                                <p id="timer"></p>
                                 <input type="hidden" name="button-value" id="button-value" value="">
+                                <p>Submit</p>
                             </button>
+                            <p id="timer"></p>
                         </form>
                     </tr>
                 </tbody>

@@ -11,7 +11,32 @@
         {{range $val := .Pseudo}}
             <p value="{{$val}}">{{$val}}</p><br>
         {{end}}
-        <button class="button"><a href="/startPlaying">PLAY</a></button>
+        <form id="scattegoriesWating" method="post" action="/startPlaying">
+            <div id="categories">
+                <div>
+                    <label for="category1">Catégorie :</label>
+                    <input type="text" id="category1" name="category1" value="ArtistAlbum">
+                    <button type="button" onclick="removeCategory(1)">Supprimer</button>
+                </div>
+                <div>
+                    <label for="category2">Catégorie :</label>
+                    <input type="text" id="category2" name="category2" value="Groupe de music">
+                    <button type="button" onclick="removeCategory(2)">Supprimer</button>
+                </div>
+                <div>
+                    <label for="category3">Catégorie :</label>
+                    <input type="text" id="category3" name="category3" value="Instrument de music">
+                    <button type="button" onclick="removeCategory(3)">Supprimer</button>
+                </div>
+                <div>
+                    <label for="category4">Catégorie :</label>
+                    <input type="text" id="category4" name="category4" value="Featuring">
+                    <button type="button" onclick="removeCategory(4)">Supprimer</button>
+                </div>
+            </div>
+            <button type="button" onclick="addCategory()">Ajouter une catégorie</button>
+        </form>
+        <button type="submit" form="scattegoriesWating" value="Submit"><a href="/startPlaying">PLAY</a></button>
     </body>
     <script>
         let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -24,6 +49,19 @@
             if (event.data == "newUser"){
                 window.location.href = "/waiting"
             }
+        }
+
+        function addCategory() {
+            var categories = document.getElementById('categories');
+            var numCategories = categories.getElementsByTagName('div').length + 1;
+            var newCategory = document.createElement('div');
+            newCategory.innerHTML = '<label for="category' + numCategories + '">Catégorie :</label> <input type="text" id="category' + numCategories + '" name="category' + numCategories + '" value=""> <button type="button" onclick="removeCategory(' + numCategories + ')">Supprimer</button>';
+            categories.appendChild(newCategory);
+        }
+
+        function removeCategory(num) {
+            var category = document.getElementById('category' + num);
+            category.parentNode.parentNode.removeChild(category.parentNode);
         }
     </script>
 </html>

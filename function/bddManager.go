@@ -82,6 +82,28 @@ func resetUserTable(db *sql.DB) {
 	}
 }
 
+// Reset User table
+func resetRoomTable(db *sql.DB) {
+	_, err := db.Exec("DROP TABLE IF EXISTS `ROOM`")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = db.Exec("DROP TABLE IF EXISTS `ROOM_USERS`")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec("CREATE TABLE ROOMS (id INTEGER PRIMARY KEY, created_by INTEGER NOT NULL, max_player INTEGER NOT NULL, name TEXT NOT NULL, id_game INTEGER, FOREIGN KEY (created_by) REFERENCES USER(id), FOREIGN KEY (id_game) REFERENCES GAMES(id))")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec("CREATE TABLE ROOM_USERS (id_room INTEGER,id_user INTEGER,score INTEGER,FOREIGN KEY (id_room) REFERENCES ROOMS(id),FOREIGN KEY (id_user) REFERENCES USER(id),PRIMARY KEY (id_room, id_user))")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Create a new room and add creator to the new room
 func createNewRoom(db *sql.DB, value [4]string) {
 	//Convert to int

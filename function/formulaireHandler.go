@@ -152,10 +152,10 @@ func WaitingForm(w http.ResponseWriter, r *http.Request) (string, int) {
 	}
 
 	switch gender {
-	case "Rock":
+	case "rock":
 		playlistID = "2xF91FPK8mitD7ND6iAt5j"
 		break
-	case "Pop":
+	case "pop":
 		playlistID = "4SSiAXhcLdrGSCGpL1B8wG"
 		break
 	case "us-rap":
@@ -185,16 +185,16 @@ func WaitingFormBT(w http.ResponseWriter, r *http.Request) (string, int) {
 	}
 
 	switch gender {
-	case "Rock":
-		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+	case "rock":
+		playlistID = "2xF91FPK8mitD7ND6iAt5j"
 		break
-	case "Pop":
-		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+	case "pop":
+		playlistID = "4SSiAXhcLdrGSCGpL1B8wG"
 		break
-	case "Clasic":
-		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
+	case "us-rap":
+		playlistID = "5VvIIqAZBwjQ7hTqZbcjKr"
 		break
-	case "Jazz":
+	case "normal":
 		playlistID = "5tYg6pvAiwa3taoNAG3HzC"
 		break
 	default:

@@ -8,9 +8,10 @@
         <audio autoplay controls>
             <source src={{.}} type="audio/mpeg">
         </audio>  
-      <form id="estart" method="post" action="/blindtestverif">
+        <p id="timer"></p>
+      <form id="blindtest" method="post" action="/blindtestverif">
         <input required name="music-name" type="text" value="" placeholder="Music name"/>
-        <button type="submit" form="estart" value="Submit">submit</button>
+        <button type="submit" form="blindtest" value="Submit">submit</button>
       </form>
     </div>
   </body>
@@ -28,7 +29,7 @@
         timeLeft--;
         if (timeLeft < 0) {
             clearInterval(timerInterval);
-            document.getElementById("deaftest").submit();
+            document.getElementById("blindtest").submit();
         }
     }, 1000);
 </script>

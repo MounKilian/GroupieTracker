@@ -40,8 +40,12 @@
                     <img src="../static/img/hostLogo.png" alt="livingRoom">
                 </div>
                 <br>
-                    <button class="button" type="button" onclick="location.href='/waiting'" value="Submit">HOST</button>
-                <br>
+                <form id="hostForm" method="post" action="/waiting">
+                    <label for="max-players">Maximum number of players:</label>
+                    <input required name="nb-player" type="number" id="max-players" min="1" max="6">
+                    <br>
+                    <button class="button" type="submit">HOST</button>
+                </form>                
                 <br>
             </div>
         </div>

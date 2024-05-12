@@ -133,7 +133,7 @@ func WaitingInvit(w http.ResponseWriter, r *http.Request, room *Room) {
 	if code == "" {
 		user := GetUserById(db, userid)
 		IDroom, err := GetRoomByName(db, responseJoin)
-		if IDroom == 0 {
+		if IDroom == 0 || checkNbPlayer(db, IDroom)+1 > room.nbrsMaxPlayers {
 			http.Redirect(w, r, "/room", http.StatusFound)
 		} else {
 			if err != nil {

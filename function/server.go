@@ -38,13 +38,14 @@ type Deaftest struct {
 }
 
 type Room struct {
-	id         string
-	clients    map[*websocket.Conn]bool
-	register   chan *websocket.Conn
-	unregister chan *websocket.Conn
-	mu         sync.RWMutex
-	letter     string
-	game       string
+	id             string
+	clients        map[*websocket.Conn]bool
+	register       chan *websocket.Conn
+	unregister     chan *websocket.Conn
+	mu             sync.RWMutex
+	letter         string
+	game           string
+	nbrsMaxPlayers int
 }
 
 var upgrader = websocket.Upgrader{
@@ -147,6 +148,9 @@ func Server() {
 		ScattegoriesVerificationChecker(w, r)
 	})
 	http.HandleFunc("/waiting", func(w http.ResponseWriter, r *http.Request) {
+		nbPlayers := r.FormValue("nb-player")
+		log.Println(nbPlayers)
+		room.nbrsMaxPlayers, _ = strconv.Atoi(nbPlayers)
 		Waiting(w, r, room)
 	})
 	http.HandleFunc("/win", func(w http.ResponseWriter, r *http.Request) {

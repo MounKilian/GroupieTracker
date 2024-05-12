@@ -22,10 +22,6 @@
             <label for="num-songs">Number of songs:</label>
             <input required name="nb-song" type="number" id="num-songs" min="1" max="10">
             <br>
-            <label for="max-players">Maximum number of players:</label>
-            <input required name="nb-player" type="number" id="max-players" min="1" max="6" oninput="validateMaxPlayers()">
-            <br>
-            <div id="error-message" style="color: red;"></div>
         </form>
         <button type="submit" form="waiting" value="Submit">Play</button>
 	</div>
@@ -40,18 +36,6 @@
         ws.onmessage = function(event){
             if (event.data == "newUser"){
                 window.location.href = "/waiting"
-            }
-        }
-
-        function validateMaxPlayers() {
-            var maxPlayers = document.getElementById('max-players').value;
-            var errorMessage = document.getElementById('error-message');
-
-            // Clear the error message if maxPlayers is less than or equal to 6
-            if (maxPlayers <= 6) {
-                errorMessage.textContent = '';
-            }else {
-                errorMessage.textContent = 'To much player, 6 player maximum';
             }
         }
     </script>

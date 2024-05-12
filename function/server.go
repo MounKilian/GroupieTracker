@@ -157,6 +157,7 @@ func Server() {
 		Win(w, r)
 	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
+		DeleteCodeCookies(w, r)
 		RoomStart(w, r, room)
 	})
 	http.HandleFunc("/sendData", func(w http.ResponseWriter, r *http.Request) {

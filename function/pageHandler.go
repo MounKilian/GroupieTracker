@@ -85,6 +85,31 @@ func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	}
 }
 
+func BlindTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	userId := GetCoockie(w, r, "userId")
+	currentRoom := GetCurrentRoomUser(db, userId)
+	score := GetPlayerScore(db, currentRoom, userId)
+	if Deaftest.finish == true {
+		Deaftest.finish = false
+		template, err := template.ParseFiles("./pages/deaftest/deaftestroundCreator.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, score)
+	} else {
+		template, err := template.ParseFiles("./pages/deaftest/deaftestround.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, score)
+	}
+}
+
 func RoomStart(w http.ResponseWriter, r *http.Request, room *Room) {
 	game = r.FormValue("game-value")
 	room.game = game
@@ -219,4 +244,12 @@ func Win(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	template.Execute(w, playersScore)
+}
+
+func BlindTest(w http.ResponseWriter, r *http.Request, Blindtest *Blindtest) {
+	template, err := template.ParseFiles("./pages/blindtest/blindtest.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	template.Execute(w, Blindtest.currentBtest.PreviewURL)
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
+  </head>
+  <body>
+    <div class="container">
+        <audio autoplay controls>
+            <source src={{.}} type="audio/mpeg">
+        </audio>  
+      <form id="estart" method="post" action="/blindtestverif">
+        <input required name="music-name" type="text" value="" placeholder="Music name"/>
+        <button type="submit" form="estart" value="Submit">submit</button>
+      </form>
+    </div>
+  </body>
+  <script>
+    let timerElement = document.getElementById("timer");
+    let timeLeft = 60;
+    let timerInterval = setInterval(function() {
+        timerElement.textContent = `Time left: ${timeLeft} seconds`;
+        timeLeft--;
+        if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            document.getElementById("deaftest").submit();
+        }
+    }, 1000);
+</script>
+</html>

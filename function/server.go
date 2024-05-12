@@ -17,6 +17,15 @@ var state = false
 var players = 0
 var last = 0
 
+type Blindtest struct {
+	gender       string
+	nbSong       int
+	currentBtest Btest
+	currentPlay  int
+	nbPlayer     int
+	finish       bool
+}
+
 type Deaftest struct {
 	gender       string
 	nbSong       int
@@ -59,6 +68,15 @@ func NewDeaf() *Deaftest {
 	}
 }
 
+func NewBlind() *Blindtest {
+	return &Blindtest{
+		gender:      "",
+		nbSong:      0,
+		currentPlay: 0,
+		finish:      false,
+	}
+}
+
 func (room *Room) Start() {
 	for {
 		select {
@@ -89,6 +107,7 @@ func Server() {
 	room := NewRoom()
 	go room.Start()
 	Deaftest := NewDeaf()
+	Blindtest := NewBlind()
 	questionsMap = make(map[string][]Question)
 
 	http.HandleFunc("/", Home)
@@ -199,16 +218,19 @@ func Server() {
 		}
 		defer db.Close()
 		roomId, err := GetRoomByName(db, code)
+		nbrsUsers := checkNbPlayer(db, roomId)
 		if room.game == "scattegories" {
 			room.letter = selectRandomLetter()
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if room.game == "blindTest" {
-			http.Redirect(w, r, "/room", http.StatusFound)
+			Blindtest.gender, Blindtest.nbSong = WaitingFormBT(w, r)
+			Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
+			Blindtest.nbPlayer = nbrsUsers
+			room.broadcastMessage("blind_" + code)
 		} else if room.game == "deafTest" {
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentPlay = 0
-			nbrsUsers := checkNbPlayer(db, roomId)
 			Deaftest.nbPlayer = nbrsUsers
 			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
 			room.broadcastMessage("deaf_" + code)
@@ -216,6 +238,52 @@ func Server() {
 	})
 	http.HandleFunc("/waitingInvit", func(w http.ResponseWriter, r *http.Request) {
 		WaitingInvit(w, r, room)
+	})
+	http.HandleFunc("/sendDataBT", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
+		room.broadcastMessage("blind_" + code)
+	})
+	http.HandleFunc("/blindtest", func(w http.ResponseWriter, r *http.Request) {
+		BlindTest(w, r, Blindtest)
+	})
+	http.HandleFunc("/blindtestverif", func(w http.ResponseWriter, r *http.Request) {
+		Blindtest.nbSong--
+		Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
+		BlindForm(w, r, Blindtest)
+	})
+	http.HandleFunc("/blindtestround", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("sqlite3", "BDD.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+		userid := GetCoockie(w, r, "userId")
+		code := GetCoockieCode(w, r, "code")
+		roomID, _ := GetRoomByName(db, code)
+		if userid == GetCrteatedPlayer(db, roomID) {
+			Deaftest.currentMusic = PlaylistConnect(Deaftest.gender)
+		}
+		last++
+		if Deaftest.nbPlayer == 1 {
+			if last == 1 {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					Deaftest.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				last = 0
+			}
+		} else {
+			if last == Deaftest.nbPlayer {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					Deaftest.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				last = 0
+			}
+		}
+		DeafTestRound(w, r, Deaftest)
 	})
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		HandleWebSocket(room, w, r)

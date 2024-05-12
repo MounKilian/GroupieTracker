@@ -83,7 +83,9 @@ func checkMusic(track *spotify.FullTrack) bool {
 	return true
 }
 
-func TestPlaylist() {
+func TestPlaylist() []string {
+	var trackName []string
+
 	authConfig := &clientcredentials.Config{
 		ClientID:     "2a8a0128c5aa4458b24fc07d90d76135",
 		ClientSecret: "c0d7e68a34b04b88ae577d71163ab073",
@@ -97,23 +99,20 @@ func TestPlaylist() {
 
 	client := spotify.Authenticator{}.NewClient(accessToken)
 
-	playlistID := spotify.ID("2h7KHuoD0IfVNDeQDqTGIJ")
+	playlistID := spotify.ID("4SSiAXhcLdrGSCGpL1B8wG")
 	playlist, err := client.GetPlaylist(playlistID)
 	if err != nil {
 		log.Fatalf("error retrieve playlist data: %v", err)
 	}
 
 	for i := 0; i < playlist.Tracks.Total; i++ {
-		fmt.Println("Checking track" + strconv.Itoa(i))
-		if !checkMusic(&playlist.Tracks.Tracks[i].Track) {
-			_, err := client.RemoveTracksFromPlaylist(playlistID, playlist.Tracks.Tracks[i].Track.ID)
-			if err != nil {
-				log.Printf("error removing track %s from playlist: %v", playlist.Tracks.Tracks[i].Track.Name, err)
-			} else {
-				fmt.Printf("Removed track %s from playlist\n", playlist.Tracks.Tracks[i].Track.Name)
-			}
+		fmt.Println("Checking track : " + strconv.Itoa(i))
+		track := playlist.Tracks.Tracks[i].Track
+		if !checkMusic(&track) {
+			trackName = append(trackName, track.Name)
 		}
 	}
+	return trackName
 }
 
 func ExtractSuffix(s string) string {

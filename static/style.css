@@ -291,6 +291,48 @@ body {
     margin-top: 10px;
     margin-left: 35%;
 }
+/* ************************DEAFTEST ROOM*********************** */
+
+.screen-container-gauche  {
+    width: 35%;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin-top: 0;
+    margin: 5vh;
+    transition: transform 0.3s ease;
+}
+
+.screen-container-gauche:hover {
+    transform: scale(1.05);
+}
+
+.pseudo-container {
+    width: 60%;
+    margin: 1vh;
+    border: 2px solid #ffdd00;
+    background-color: #fcf8ff;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.select {
+    width: 60%;
+    margin: 1vh;
+    border: 2px solid #ffdd00;
+    background-color: #fcf8ff;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
 
 /* ************************LANDING PAGE*********************** */
 

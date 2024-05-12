@@ -4,6 +4,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    background-color: #7b5eab;
+    border-radius: 15px;
+    margin-bottom: 5vh;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+
 }
 .logo img {
     max-width: 15%;
@@ -17,7 +22,6 @@ body {
     margin: 0;
     flex-direction: column;
     font-family: URW Chancery L, cursive;
-    /*overflow: hidden;*/
 }
 .container {
     height: 90%;
@@ -25,7 +29,7 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
 }
-.containerGauche {
+.containerLeft {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -33,7 +37,7 @@ body {
     align-items: center;
     width: 25%;
 }
-.containerDroit {
+.containerRight {
     display: flex;
     flex-direction: column;
     width: 75%;
@@ -198,48 +202,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .containerGauche,
-    .containerDroit {
-        width: 100%;
-    }
-    .container {
-        flex-direction: column;
-    }
-    .animateur {
-        display: none;
-    }
-    .canape {
-        width: auto;
-    }
-    .screen-container {
-        width: auto;
-        margin: 0;
-    }
-    .responsiveAnimateur {
-        width: 100%;
-        display: block;
-    }
-    .responsiveAnimateur {
-        margin-top: 0;
-        width: 65%;
-        position: relative;
-        align-self: center;
-    }
-    .responsiveAnimateur img {
-        max-width: 100%;
-        height: auto;
-    }
-    .screen-container {
-        padding-bottom: 15vh;
-        padding-top: 15vh;
-        background-color: #f3e3ff;
-        border-radius: 10px;
-        justify-content: center;
-        align-items: center;
-        margin: 0 5vh;
-    }
-}
+
 
 /* ************************ROOM MANAGER*********************** */
 
@@ -332,29 +295,82 @@ body {
     margin-top: 10px;
     margin-left: 35%;
 }
+/* ************************DEAFTEST ROOM*********************** */
 
-/* style.css */
+.screen-container-left  {
+    width: 35%;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin-top: 0;
+    margin: 5vh;
+    transition: transform 0.3s ease;
+}
+
+.screen-container-left:hover {
+    transform: scale(1.05);
+}
+
+.pseudo-container {
+    width: 60%;
+    margin: 1vh;
+    border: 2px solid #ffdd00;
+    background-color: #fcf8ff;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.select {
+    width: 60%;
+    margin: 1vh;
+    border: 2px solid #ffdd00;
+    background-color: #fcf8ff;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* ************************LANDING PAGE*********************** */
+
+#game-form {
+    display: flex;
+    flex-direction: row;
+}
+
 .game-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: row;
 }
 
 .game-card {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    cursor: pointer;
+    width: auto;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin: 5vh;
+    transition: transform 0.3s ease;
 }
 
 .game-card:hover {
-    background-color: #f7f7f7;
+    transform: scale(1.05);
 }
 
 .game-card img {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     margin-bottom: 10px;
 }
 
@@ -397,3 +413,52 @@ body {
 	margin-top: 20px;
 }
 
+
+/* ************************RESPONSIVE*********************** */
+
+@media (max-width: 768px) {
+    .containerGauche,
+    .containerDroit {
+        width: 100%;
+    }
+    .container {
+        flex-direction: column;
+    }
+    .animateur {
+        display: none;
+    }
+    .canape {
+        width: auto;
+    }
+    .screen-container {
+        width: auto;
+        margin: 0;
+    }
+    .responsiveAnimateur {
+        width: 100%;
+        display: block;
+    }
+    .responsiveAnimateur {
+        margin-top: 0;
+        width: 65%;
+        position: relative;
+        align-self: center;
+    }
+    .responsiveAnimateur img {
+        max-width: 100%;
+        height: auto;
+    }
+    .screen-container {
+        padding-bottom: 15vh;
+        padding-top: 15vh;
+        background-color: #f3e3ff;
+        border-radius: 10px;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5vh;
+    }
+}
+
+h2 {
+    color: #fff;
+}

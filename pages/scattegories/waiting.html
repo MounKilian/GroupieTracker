@@ -35,8 +35,21 @@
             <div class="screen-container-right">
             <div id="player">
                 <h1>Petit bac</h1>
-                <button class="button"><a href="/startPlaying">PLAY</a></button>
             </div>
+            <form id="responseForm" action="/startPlaying" method="get">
+                <label for="responseTime">Temps de reponse :</label>
+                <select name="responseTime" id="responseTime">
+                    <option value="15">15 secondes</option>
+                    <option value="30">30 secondes</option>
+                    <option value="45">45 secondes</option>
+                    <option value="60" selected>60 secondes</option>
+                    <option value="75">75 secondes</option>
+                    <option value="90">90 secondes</option>
+                    <option value="105">105 secondes</option>
+                    <option value="120">120 secondes</option>
+                </select>
+                <button type="submit" class="button">PLAY</button>
+            </form>
         </div>
         </div>
         <div class="canape">
@@ -65,12 +78,12 @@
     }
 
     document.getElementById("codeButton").addEventListener("click", function() {
-    var codeText = this.textContent || this.innerText;
-    navigator.clipboard.writeText(codeText).then(function() {
-        console.log("Code copied to clipboard");
-    }, function(err) {
-        console.error("Failed to copy code: ", err);
-    });
+        var codeText = this.textContent || this.innerText;
+        navigator.clipboard.writeText(codeText).then(function() {
+            console.log("Code copied to clipboard");
+        }, function(err) {
+            console.error("Failed to copy code: ", err);
+        });
     });
 </script>
 </html>

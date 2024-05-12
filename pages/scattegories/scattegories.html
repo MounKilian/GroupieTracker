@@ -14,6 +14,7 @@
             <div class="container">
             <p id="timer"></p>
             <br>
+            {{.Letter}}
             <br>
             <div class="table-container">
                 <table id="heroes-table" class="table-scrollable">
@@ -46,6 +47,7 @@
             </button>
         </div>
         <script>
+
             let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
     
             ws.onopen = function(){
@@ -65,7 +67,7 @@
             }
 
             let timerElement = document.getElementById("timer");
-            let timeLeft = 60;
+            let timeLeft = parseInt("{{ .Time }}");
             let timerInterval = setInterval(function() {
                 timerElement.textContent = `Time left: ${timeLeft} seconds`;
                 timeLeft--;

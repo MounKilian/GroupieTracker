@@ -15,6 +15,12 @@
     </div>
   </body>
   <script>
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+
     let timerElement = document.getElementById("timer");
     let timeLeft = 60;
     let timerInterval = setInterval(function() {

@@ -130,12 +130,14 @@ func BlindForm(w http.ResponseWriter, r *http.Request, Blindtest *Blindtest) {
 	}
 	musicName := r.FormValue("music-name")
 	if MatchTitle(Blindtest.currentBtest.name, musicName) {
+		userId := GetCoockie(w, r, "userId")
+		currentRoom := GetCurrentRoomUser(db, userId)
+		UpdatePlayerScore(db, currentRoom, userId, 10)
 	}
 	if Blindtest.currentPlay == Blindtest.nbSong {
-		Blindtest.currentPlay = 0
 		http.Redirect(w, r, "/win", http.StatusFound)
 	}
-	http.Redirect(w, r, "/blindtest", http.StatusFound)
+	http.Redirect(w, r, "/blindtestround", http.StatusFound)
 }
 
 func WaitingForm(w http.ResponseWriter, r *http.Request) (string, int) {

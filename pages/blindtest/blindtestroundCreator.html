@@ -6,7 +6,7 @@
   <body>
     {{.}}
     <div class="container">
-      <form id="blindtest" method="post" action="/sendData">
+      <form id="blindtest" method="post" action="/sendDataBT">
         <button id="button" type="submit" form="blindtest" value="Submit">Submit</button>
       </form>
     </div>
@@ -18,14 +18,12 @@
         console.log("Websocket open")
     }
 
-    ws.onmessage = function(event){
-      if (event.data.startsWith("deaf")){
+    if (event.data.startsWith("blind")){
         let code = getCookie("code")
         if (event.data.includes(code)){
-            window.location.href = "/deaftest"
+            window.location.href = "/blindtest"
         }
       }
-    }
 
     function getCookie(name) {
         const cookieName = name;

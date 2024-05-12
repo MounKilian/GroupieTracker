@@ -32,6 +32,12 @@
                     window.location.href = "/deaftest"
                 }
             }
+            if (event.data.startsWith("blind")){
+                let code = getCookie("code")
+                if (event.data.includes(code)){
+                    window.location.href = "/blindtest"
+                }
+            }
             if (event.data == "newUser"){
                 window.location.href = "/waitingInvit"
             }

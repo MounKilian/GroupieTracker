@@ -29,7 +29,6 @@
                             <button type="submit" form="scattegories" id="submit-btn">
                                 <p id="timer"></p>
                                 <input type="hidden" name="button-value" id="button-value" value="">
-                                <a href="/scattegoriesChecker">Submit</a>
                             </button>
                         </form>
                     </tr>
@@ -44,17 +43,23 @@
             }
     
             ws.onmessage = function(event){
-                if (event.data === "end"){
-                    document.getElementById("scattegories").submit()
+                if (event.data.startsWith("end_")){
+                    let code = getCookie("code")
+                    if (event.data.includes(code)){
+                        let userid = getCookie("userId")
+                        if (!event.data.includes(userid)){
+                            document.getElementById("scattegories").submit()
+                        }
+                    }
                 }
             }
 
         </script>
         <script>
-            let btn = document.getElementById("submit-btn");
+            let btn = document.getElementById("submit-btn")
             btn.addEventListener("click", function(){
                 let userId = getCookie("userId")
-                document.getElementById("button-value").value = userId;   
+                document.getElementById("button-value").value = userId   
             })
             let timerElement = document.getElementById("timer");
             let timeLeft = 60;
@@ -68,7 +73,7 @@
             }, 1000);
 
             function getCookie(name) {
-                const cookieName = "userId";
+                const cookieName = name;
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     const cookie = cookies[i].trim();

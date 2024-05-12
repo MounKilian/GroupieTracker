@@ -243,7 +243,22 @@ body {
 
 /* ************************ROOM MANAGER*********************** */
 
-.join-container, .host-container {
+.host-container {
+    width: 35%;
+    background-color: #7b5eab;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    margin: 5vh;
+    transition: transform 0.3s ease;
+}
+
+.join-container{
+    height: 78%;
     width: 35%;
     background-color: #7b5eab;
     border-radius: 5px;
@@ -298,9 +313,87 @@ body {
     width: 75%;
     padding: 10px;
     margin-top: 10px;
+    margin-left: 20px;
     border: 2px solid #ffdd00;
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
     text-align: center;
 }
+
+#join{
+    width: 75%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+#button-join{
+    margin-top: 10px;
+    margin-left: 35%;
+}
+
+/* style.css */
+.game-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-card {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.game-card:hover {
+    background-color: #f7f7f7;
+}
+
+.game-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.game-card h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.lyrics {
+    height: 200px;
+    overflow: hidden;
+    border: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+}
+  
+.lyrics p {
+    margin: 0;
+    line-height: 20px;
+    height: 20px;
+    animation: scroll 10s linear infinite;
+}
+  
+@keyframes scroll {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+}
+
+#player {
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#player-list {
+	margin-top: 20px;
+}
+

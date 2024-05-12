@@ -7,8 +7,11 @@
         <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <h1>{{.}}</h1>
-        <button><a href="/startPlaying">PLAY</a></button>
+        <h1>Code de jeu : {{.Code}}</h1>
+        {{range $val := .Pseudo}}
+            <p value="{{$val}}">{{$val}}</p><br>
+        {{end}}
+        <button class="button"><a href="/startPlaying">PLAY</a></button>
     </body>
     <script>
         let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -18,7 +21,9 @@
         }
 
         ws.onmessage = function(event){
-            console.log(event)
+            if (event.data == "newUser"){
+                window.location.href = "/waiting"
+            }
         }
     </script>
 </html>

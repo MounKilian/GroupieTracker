@@ -7,7 +7,10 @@
         <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <h1>{{.}}</h1>
+        <h1>Code de jeu : {{.Code}}</h1>
+        {{range $val := .Pseudo}}
+            <p value="{{$val}}">{{$val}}</p><br>
+        {{end}}
     </body>
     <script>
         let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -18,8 +21,32 @@
 
         ws.onmessage = function(event) {
             if (event.data.startsWith("data")){
-                window.location.href = "/scattegories"
+                let code = getCookie("code")
+                if (event.data.includes(code)){
+                    window.location.href = "/scattegories"
+                }
+            }
+            if (event.data.startsWith("deaf")){
+                let code = getCookie("code")
+                if (event.data.includes(code)){
+                    window.location.href = "/deaftest"
+                }
+            }
+            if (event.data == "newUser"){
+                window.location.href = "/waitingInvit"
             }
         }
+
+        function getCookie(name) {
+                const cookieName = name;
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(cookieName + '=')) {
+                    return cookie.substring(cookieName.length + 1);
+                    }
+                }
+                return null;
+            }
     </script>
 </html>

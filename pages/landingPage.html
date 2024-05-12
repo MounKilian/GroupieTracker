@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie caca</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../static/img/logo.png" alt="Logo">
+            </div>
+        </nav>
+    </header>
+    <main>
+        <form action="/room" id="game-form">
+            <input type="hidden" name="game-value" id="game-value" value="">
+            <div class="game-card" data-game="scattegories">
+                <img src="../static/img/petit-bac.png" alt="Petit Bac">
+                <h2>Petit Bac</h2>
+            </div>
+            <div class="game-card" data-game="blindTest">
+                <img src="../static/img/blind-test.png" alt="Blind Test">
+                <h2>Blind Test</h2>
+            </div>
+            <div onclick="location.href='/roomDeafTest'" class="game-card" data-game="deafTest">
+                <img src="../static/img/deaf-test.png" alt="Deaf Test">
+                <h2>Deaf Test</h2>
+            </div>
+        </form>
+    </main>
+    <script src="../static/script.js"></script>
+</body>
+<script src="../static/style.js"></script>
+<script>
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+
+    ws.onmessage = function(event){
+        console.log(event)
+    }
+
+    const gameCards = document.querySelectorAll('.game-card')
+    const gameForm = document.getElementById('game-form')
+
+    gameCards.forEach((gameCard) => {
+        gameCard.addEventListener('click', () => {
+            const game = gameCard.dataset.game
+            document.getElementById("game-value").value = game
+            gameForm.submit()
+        })
+    })
+</script>
+</html>

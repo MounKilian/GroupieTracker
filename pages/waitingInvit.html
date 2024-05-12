@@ -19,27 +19,27 @@
         </div>
     </div>
     <div class="containerRight">
-        <div class="screen-container-left">
-            <br>
-            <div class="code-container">
-                <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
+        <div class="screen-container">
+            <div class="screen-container-left">
+                <br>
+                <div class="code-container">
+                    <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
+                </div>
+                <br>
+                {{range $val := .Pseudo}}
+                <div class="pseudo-container">
+                <p value="{{$val}}">{{$val}}</p>
+                </div>
+                {{end}}
             </div>
-            <br>
-            {{range $val := .Pseudo}}
-            <div class="pseudo-container">
-            <p value="{{$val}}">{{$val}}</p>
-            </div>
-            {{end}}
         </div>
+
         <div class="canape">
             <img src="static/img/canape.png" alt="Canapé">
         </div>
         <div class="responsiveAnimateur">
             <img src="static/img/responsiveAnimateur.png" alt="Animateur">
         </div>
-    </div>
-    <div class="containerMilieu">
-
     </div>
 </div>
 </body>

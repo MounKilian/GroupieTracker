@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>test</title>
+        <title>Groupie</title>
         <meta charset="utf-8"/>
-        <link rel="stylesheet" type="text/css"/>
-    </head>
-    <body>
-        {{.}}
-        <div class="table-conteneur">
-            <table id="heroes-table" class="table-scrollable">
-                <thead >
-                    <tr>
-                        <th>Artist</th>
-                        <th>Album</th>
-                        <th>Groupe de music</th>
-                        <th>Instrument de music</th>
-                        <th>Featuring</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <form id="scattegories" method="post" action="/scattegoriesChecker">
-                            <td><input name="artist" placeholder="Artist" required></input></td>
-                            <td><input name="album" placeholder="Album" required></input></td>
-                            <td><input name="groupe-de-music" placeholder="Groupe de music" required></input></td>
-                            <td><input name="instrument-de-music" placeholder="Instrument de music" required></input></td>
-                            <td><input name="featuring" placeholder="Featuring" required></input></td>
-                            <button type="submit" form="scattegories" id="submit-btn">
-                                <input type="hidden" name="button-value" id="button-value" value="">
-                                <p>Submit</p>
-                            </button>
-                            <p id="timer"></p>
-                        </form>
-                    </tr>
-                </tbody>
-            </table>
+        <link rel="stylesheet" href="static/gameStyle.css">
+        </head>
+        <body>
+            <header>
+                <div class="logo">
+                    <img src="../static/img/logo.png" alt="Logo">
+                </div>
+            </header>
+            <div class="container">
+            <p id="timer"></p>
+            <br>
+            <br>
+            <div class="table-container">
+                <table id="heroes-table" class="table-scrollable">
+                    <thead >
+                        <tr>
+                            <th>Artist</th>
+                            <th>Album</th>
+                            <th>Groupe de music</th>
+                            <th>Instrument de music</th>
+                            <th>Featuring</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <form id="scattegories" method="post" action="/scattegoriesChecker">
+                                <td><input class="input" name="artist" placeholder="Artist" required></input></td>
+                                <td><input class="input" name="album" placeholder="Album" required></input></td>
+                                <td><input class="input" name="groupe-de-music" placeholder="Groupe de music" required></input></td>
+                                <td><input class="input" name="instrument-de-music" placeholder="Instrument de music" required></input></td>
+                                <td><input class="input" name="featuring" placeholder="Featuring" required></input></td>
+                            </form>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>    
+            <button class="button" type="submit" form="scattegories" id="submit-btn" value="Submit">
+                <input type="hidden" name="button-value" id="button-value" value="">
+                <p>Submit</p>
+            </button>
         </div>
         <script>
             let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
@@ -42,7 +51,7 @@
             ws.onopen = function(){
                 console.log("Websocket open")
             }
-    
+
             ws.onmessage = function(event){
                 if (event.data.startsWith("end_")){
                     let code = getCookie("code")
@@ -55,13 +64,6 @@
                 }
             }
 
-        </script>
-        <script>
-            let btn = document.getElementById("submit-btn")
-            btn.addEventListener("click", function(){
-                let userId = getCookie("userId")
-                document.getElementById("button-value").value = userId   
-            })
             let timerElement = document.getElementById("timer");
             let timeLeft = 60;
             let timerInterval = setInterval(function() {
@@ -86,4 +88,4 @@
             }
         </script>
     </body>
-</html> 
+</html>

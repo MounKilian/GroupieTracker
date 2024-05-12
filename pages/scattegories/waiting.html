@@ -1,29 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Groupie caca</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./static/style.css">
-    </head>
-    <body>
-        <h1>Code de jeu : {{.Code}}</h1>
-        {{range $val := .Pseudo}}
-            <p value="{{$val}}">{{$val}}</p><br>
-        {{end}}
-        <button class="button"><a href="/startPlaying">PLAY</a></button>
-    </body>
-    <script>
-        let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+<head>
+    <title>Groupie caca</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="./static/img/logo.png" alt="Logo">
+    </div>
+</header>
+<div class="container">
+    <div class="containerLeft">
+        <div class="animateur">
+            <img src="static/img/animateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerRight">
+        <div class="screen-container">
+            <div class="screen-container-left">
+                <br>
+                <div class="code-container">
+                    <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
+                </div>
+                <br>
+                {{range $val := .Pseudo}}
+                <div class="pseudo-container">
+                <p value="{{$val}}">{{$val}}</p>
+                </div>
+                {{end}}
+            </div>
+            <div class="screen-container-right">
+            <div id="player">
+                <h1>Petit bac</h1>
+                <button class="button"><a href="/startPlaying">PLAY</a></button>
+            </div>
+        </div>
+        </div>
+        <div class="canape">
+            <img src="static/img/canape.png" alt="Canapé">
+        </div>
+        <div class="responsiveAnimateur">
+            <img src="static/img/responsiveAnimateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerMilieu">
 
-        ws.onopen = function(){
-            console.log("Websocket open")
-        }
+    </div>
+</div>
+</body>
+<script>
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
 
-        ws.onmessage = function(event){
-            if (event.data == "newUser"){
-                window.location.href = "/waiting"
-            }
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+
+    ws.onmessage = function(event){
+        if (event.data == "newUser"){
+            window.location.href = "/waiting"
         }
-    </script>
+    }
+
+    document.getElementById("codeButton").addEventListener("click", function() {
+    var codeText = this.textContent || this.innerText;
+    navigator.clipboard.writeText(codeText).then(function() {
+        console.log("Code copied to clipboard");
+    }, function(err) {
+        console.error("Failed to copy code: ", err);
+    });
+    });
+</script>
 </html>
+

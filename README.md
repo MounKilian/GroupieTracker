@@ -35,7 +35,7 @@ If you don't have the message for open it you can write this in your browser:
 ```bash
   http://[IP]:8080/
 ```
-3. To find out its IP you must launch the command prompt and enter this command:
+3. You have to open your port. To find out its IP you must launch the command prompt and enter this command:
 Windows
 ```bash
   ipconfig

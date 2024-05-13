@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand/v2"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -128,4 +129,9 @@ func RandomString() string {
 		b[i] = letterRunes[rand.IntN(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func EmailValid(e string) bool {
+	emailRegex := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	return emailRegex.MatchString(e)
 }

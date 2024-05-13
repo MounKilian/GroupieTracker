@@ -43,8 +43,9 @@ type Room struct {
 	register       chan *websocket.Conn
 	unregister     chan *websocket.Conn
 	mu             sync.RWMutex
-	letter         string
+	Letter         string
 	game           string
+	Time           string
 	nbrsMaxPlayers int
 }
 
@@ -121,14 +122,16 @@ func Server() {
 		LandingPage(w, r)
 	})
 	http.HandleFunc("/scattegories", func(w http.ResponseWriter, r *http.Request) {
-		Scattegories(w, r, room.letter)
+		Scattegories(w, r, room)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
+		log.Println("ok")
 		questions := questionsMap[code]
 		if strconv.Itoa(userid) == buttonValue {
+			log.Println("ok")
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)
@@ -157,6 +160,7 @@ func Server() {
 		Win(w, r)
 	})
 	http.HandleFunc("/room", func(w http.ResponseWriter, r *http.Request) {
+		DeleteCodeCookies(w, r)
 		RoomStart(w, r, room)
 	})
 	http.HandleFunc("/sendData", func(w http.ResponseWriter, r *http.Request) {
@@ -227,7 +231,12 @@ func Server() {
 		roomId, err := GetRoomByName(db, code)
 		nbrsUsers := checkNbPlayer(db, roomId)
 		if room.game == "scattegories" {
-			room.letter = selectRandomLetter()
+			if err := r.ParseForm(); err != nil {
+				log.Fatal(err)
+			}
+			room.Time = r.FormValue("responseTime")
+			log.Println(room.Time)
+			room.Letter = selectRandomLetter()
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if room.game == "blindTest" {

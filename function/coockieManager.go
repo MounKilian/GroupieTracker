@@ -75,3 +75,14 @@ func DeleteCookies(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, cookie)
 	}
 }
+
+func DeleteCodeCookies(w http.ResponseWriter, r *http.Request) {
+	cookies := r.Cookies()
+	for _, cookie := range cookies {
+		if cookie.Name == "code" {
+			cookie.MaxAge = -1
+			cookie.Secure = false
+			http.SetCookie(w, cookie)
+		}
+	}
+}

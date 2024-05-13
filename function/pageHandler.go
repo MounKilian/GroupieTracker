@@ -27,12 +27,12 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 // Scattegories pages
-func Scattegories(w http.ResponseWriter, r *http.Request, letter string) {
+func Scattegories(w http.ResponseWriter, r *http.Request, room *Room) {
 	template, err := template.ParseFiles("./pages/scattegories/scattegories.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, letter)
+	template.Execute(w, room)
 }
 
 func LandingPage(w http.ResponseWriter, r *http.Request) {

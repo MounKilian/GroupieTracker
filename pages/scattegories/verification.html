@@ -1,65 +1,9 @@
 <html>
 	<head>
-		<title>Quiz</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-			}
-			.theme{
-				margin-top: 20px;
-				margin-left: 50%;
-			}
-			.question-container {
-      			display: inline-block;
-      			margin: 20px;
-    		}
-			.button {
-				background-color: #4CAF50;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-			}
-			.button:hover {
-				background-color: #3e8e41;
-			}
-            .button-false {
-				background-color: #af4c4c;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-			}
-			.button-false:hover {
-				background-color: #8e3e3e;
-			}
-			.button-same {
-				background-color: #4c77af;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-			}
-			.button-same:hover {
-				background-color: #3e698e;
-			}
-			.button-next {
-				background-color: #000000;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				margin-left: auto;
-				margin-right: auto;
-			}
-			.button-next:hover {
-				background-color: #1e1e1e;
-			}
-		</style>
+		<title>Petit Bac | Lackluster Melodie</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/gameStyle.css">
 	</head>
 	<body>
 		<h1 class="theme" style="display: block;"> Artist </h1>
@@ -68,7 +12,7 @@
 		<h1 class="theme" style="display: none;"> Instrument de music </h1>
 		<h1 class="theme" style="display: none;"> Featuring </h1>
 
-		{{template "reponse-container" .}}
+		<h1  class="theme">{{template "reponse-container" .}}</h1>
 
 		<button style="display: block;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(0)">Next</button>
 		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(1)">Next</button>

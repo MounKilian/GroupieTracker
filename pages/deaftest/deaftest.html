@@ -15,7 +15,7 @@
     <div class="container">
       <p id="timer"></p>
       <div class="prompteur">
-      <p class="lyrics">{{ . }}</p>
+      <p class="lyrics">{{ .Music }}</p>
       </div>
       <form id="deaftest" method="post" action="/deaftestChecker">
         <input class="input" required name="music-name" type="text" value="" placeholder="Music name"/>
@@ -35,7 +35,7 @@
     }
     
     let timerElement = document.getElementById("timer");
-    let timeLeft = 60;
+    let timeLeft = parseInt("{{ .Time }}");
     let timerInterval = setInterval(function() {
         timerElement.textContent = `Time left: ${timeLeft} seconds`;
         timeLeft--;

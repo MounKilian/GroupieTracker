@@ -26,6 +26,7 @@ type Blindtest struct {
 	currentPlay  int
 	nbPlayer     int
 	finish       bool
+	Time         string
 }
 
 type Deaftest struct {
@@ -35,6 +36,7 @@ type Deaftest struct {
 	currentPlay  int
 	nbPlayer     int
 	finish       bool
+	Time         string
 }
 
 type Room struct {
@@ -235,17 +237,24 @@ func Server() {
 				log.Fatal(err)
 			}
 			room.Time = r.FormValue("responseTime")
-			log.Println(room.Time)
 			room.Letter = selectRandomLetter()
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if room.game == "blindTest" {
+			if err := r.ParseForm(); err != nil {
+				log.Fatal(err)
+			}
+			Blindtest.Time = r.FormValue("responseTime")
 			Blindtest.gender, Blindtest.nbSong = WaitingFormBT(w, r)
 			Blindtest.currentPlay = 0
 			Blindtest.nbPlayer = nbrsUsers
 			Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
 			room.broadcastMessage("blind_" + code)
 		} else if room.game == "deafTest" {
+			if err := r.ParseForm(); err != nil {
+				log.Fatal(err)
+			}
+			Deaftest.Time = r.FormValue("responseTime")
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentPlay = 0
 			Deaftest.nbPlayer = nbrsUsers

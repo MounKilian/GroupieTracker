@@ -35,7 +35,6 @@
                                 <td><input class="input" name="groupe-de-music" placeholder="Groupe de music" required></input></td>
                                 <td><input class="input" name="instrument-de-music" placeholder="Instrument de music" required></input></td>
                                 <td><input class="input" name="featuring" placeholder="Featuring" required></input></td>
-                            </form>
                         </tr>
                     </tbody>
                 </table>
@@ -45,8 +44,14 @@
                 <input type="hidden" name="button-value" id="button-value" value="">
                 <p>Submit</p>
             </button>
+        </form>
         </div>
         <script>
+            let btn  = document.getElementById("submit-btn");
+            btn.addEventListener("click", function(){
+                let userId = getCookie("userId");
+                document.getElementById("button-value").value = userId;
+            })
 
             let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
     
@@ -57,9 +62,12 @@
             ws.onmessage = function(event){
                 if (event.data.startsWith("end_")){
                     let code = getCookie("code")
+                    console.log("non")
                     if (event.data.includes(code)){
+                        console.log("oui")
                         let userid = getCookie("userId")
                         if (!event.data.includes(userid)){
+                            console.log("ok")
                             document.getElementById("scattegories").submit()
                         }
                     }

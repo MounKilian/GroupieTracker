@@ -128,8 +128,10 @@ func Server() {
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
+		log.Println("ok")
 		questions := questionsMap[code]
 		if strconv.Itoa(userid) == buttonValue {
+			log.Println("ok")
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)

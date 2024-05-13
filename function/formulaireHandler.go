@@ -2,9 +2,12 @@ package groupieTracker
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 	"strconv"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -18,6 +21,42 @@ type Question struct {
 	InstrumentDeMusic string
 	Featuring         string
 }
+
+type Note struct {
+	ID int
+
+	Artist struct {
+		True  int
+		False int
+		Same  int
+	}
+
+	Album struct {
+		True  int
+		False int
+		Same  int
+	}
+
+	Groupe struct {
+		True  int
+		False int
+		Same  int
+	}
+
+	Instrument struct {
+		True  int
+		False int
+		Same  int
+	}
+
+	Featuring struct {
+		True  int
+		False int
+		Same  int
+	}
+}
+
+var Reponse []Note
 
 func ScattegoriesForm(w http.ResponseWriter, r *http.Request) Question {
 	db, err := sql.Open("sqlite3", "BDD.db")
@@ -220,23 +259,103 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 	for key := range r.Form {
 		switch r.FormValue(key) {
 		case "true":
-			userId, err := strconv.Atoi(ExtractSuffix(key))
+			currentId, err := strconv.Atoi(ExtractSuffix(key))
 			if err != nil {
 				log.Fatal(err)
 			}
-			currentRoom := GetCurrentRoomUser(db, userId)
-			UpdatePlayerScore(db, currentRoom, userId, 3)
+			var found bool
+			for index, note := range Reponse {
+				id := note.ID
+				if currentId == id {
+					modifyCategoryField(ExtractSuffix(key), "True", 1, &Reponse[index])
+					found = true
+				}
+			}
+			if found != true {
+				newNote := Note{ID: currentId}
+				Reponse = append(Reponse, newNote)
+				modifyCategoryField(ExtractSuffix(key), "True", 1, &Reponse[len(Reponse)-1])
+			}
 			break
 		case "same":
-			userId, err := strconv.Atoi(ExtractSuffix(key))
+			currentId, err := strconv.Atoi(ExtractSuffix(key))
 			if err != nil {
 				log.Fatal(err)
 			}
-			currentRoom := GetCurrentRoomUser(db, userId)
-			UpdatePlayerScore(db, currentRoom, userId, 1)
+			var found bool
+			for index, note := range Reponse {
+				id := note.ID
+				if currentId == id {
+					modifyCategoryField(ExtractSuffix(key), "Same", 1, &Reponse[index])
+					found = true
+				}
+			}
+			if found != true {
+				newNote := Note{ID: currentId}
+				Reponse = append(Reponse, newNote)
+				modifyCategoryField(ExtractSuffix(key), "Same", 1, &Reponse[len(Reponse)-1])
+			}
+			break
+		case "false":
+			currentId, err := strconv.Atoi(ExtractSuffix(key))
+			if err != nil {
+				log.Fatal(err)
+			}
+			var found bool
+			for index, note := range Reponse {
+				id := note.ID
+				if currentId == id {
+					modifyCategoryField(ExtractSuffix(key), "False", 1, &Reponse[index])
+					found = true
+				}
+			}
+			if found != true {
+				newNote := Note{ID: currentId}
+				Reponse = append(Reponse, newNote)
+				modifyCategoryField(ExtractSuffix(key), "False", 1, &Reponse[len(Reponse)-1])
+			}
 			break
 		}
 	}
 
 	http.Redirect(w, r, "/win", http.StatusFound)
+}
+
+func modifyCategoryField(categoryName string, fieldName string, value int, note *Note) {
+	categoryFields := strings.Split(categoryName, ".")
+	currentField := reflect.ValueOf(note).Elem()
+
+	for i := 0; i < len(categoryFields)-1; i++ {
+		field := currentField.FieldByName(categoryFields[i])
+		if !field.IsValid() {
+			fmt.Printf("Field %s not found in Note struct\n", categoryFields[i])
+			return
+		}
+		currentField = field.Elem()
+	}
+
+	field := currentField.FieldByName(categoryFields[len(categoryFields)-1])
+	if !field.IsValid() {
+		fmt.Printf("Field %s not found in Note struct\n", categoryFields[len(categoryFields)-1])
+		return
+	}
+
+	fieldType := field.Type()
+	valueType := reflect.TypeOf(value)
+
+	if fieldType != valueType {
+		fmt.Printf("Type mismatch between category field %s and value %d\n", categoryName, value)
+		return
+	}
+
+	// Get the nested field by name
+	nestedField := field.FieldByName(fieldName)
+	if !nestedField.IsValid() {
+		fmt.Printf("Field %s not found in category field %s\n", fieldName, categoryFields[len(categoryFields)-1])
+		return
+	}
+
+	currentValue := nestedField.Int()
+	newValue := currentValue + int64(value)
+	nestedField.SetInt(newValue)
 }

@@ -120,6 +120,11 @@ func ExtractSuffix(s string) string {
 	return parts[1]
 }
 
+func ExtractPrefix(s string) string {
+	parts := strings.Split(s, "-")
+	return parts[0]
+}
+
 func RandomString() string {
 	var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 

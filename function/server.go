@@ -127,13 +127,12 @@ func Server() {
 		Scattegories(w, r, room)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
+		room.broadcastMessage("refresh")
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
-		log.Println("ok")
 		questions := questionsMap[code]
 		if strconv.Itoa(userid) == buttonValue {
-			log.Println("ok")
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)
@@ -145,8 +144,12 @@ func Server() {
 		}
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
+		userId := GetCoockie(w, r, "userId")
 		code := GetCoockieCode(w, r, "code")
 		questions := questionsMap[code]
+		user := strconv.Itoa(userId)
+		log.Println(user)
+		log.Println(questions)
 		ScattegoriesVerification(w, r, questions)
 	})
 	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {

@@ -114,7 +114,9 @@ func Server() {
 	Blindtest := NewBlind()
 	questionsMap = make(map[string][]Question)
 
-	http.HandleFunc("/", Home)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		Home(w, r, "")
+	})
 	http.HandleFunc("/checkUser", func(w http.ResponseWriter, r *http.Request) {
 		Formulaire(w, r)
 	})

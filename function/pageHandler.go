@@ -18,12 +18,12 @@ var infos Info
 var refresh = true
 
 // main pages
-func Home(w http.ResponseWriter, r *http.Request) {
-	template, err := template.ParseFiles("./index.html")
+func Home(w http.ResponseWriter, r *http.Request, errorMessage string) {
+	template, err := template.ParseFiles("./index.html", "./templates/errorHandling.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, nil)
+	template.Execute(w, errorMessage)
 }
 
 // Scattegories pages

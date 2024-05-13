@@ -93,6 +93,28 @@ func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 	}
 }
 
+func ScattegoriesRound(w http.ResponseWriter, r *http.Request, room *Room) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	if room.finish == true {
+		room.finish = false
+		template, err := template.ParseFiles("./pages/scattegories/scattegorieroundCreator.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, nil)
+	} else {
+		template, err := template.ParseFiles("./pages/scattegories/scattegorieround.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, nil)
+	}
+}
+
 func BlindTestRound(w http.ResponseWriter, r *http.Request, Blindtest *Blindtest) {
 	db, err := sql.Open("sqlite3", "BDD.db")
 	if err != nil {

@@ -14,10 +14,10 @@
 
 		<h1  class="theme">{{template "reponse-container" .}}</h1>
 
-		<button style="display: block;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(0)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(1)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(2)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(3)">Next</button>
+		<button style="display: block;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(0)" >Next</button>
+		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(1)" >Next</button>
+		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(2)" >Next</button>
+		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(3)" >Next</button>
 		<button style="display: none;" class="button-next" type="submit" form="scattegories-verification" value="Submit">Submit</button>
 		<script>
 			let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")

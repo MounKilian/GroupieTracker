@@ -16,6 +16,7 @@ var questionsMap map[string][]Question
 var state = false
 var players = 0
 var playersBT = 0
+var playersSC = 0
 var last = 0
 var lastBT = 0
 
@@ -49,6 +50,8 @@ type Room struct {
 	game           string
 	Time           string
 	nbrsMaxPlayers int
+	nbPlayer       int
+	finish         bool
 }
 
 var upgrader = websocket.Upgrader{
@@ -61,6 +64,7 @@ func NewRoom() *Room {
 		clients:    make(map[*websocket.Conn]bool),
 		register:   make(chan *websocket.Conn),
 		unregister: make(chan *websocket.Conn),
+		finish:     false,
 	}
 }
 
@@ -172,6 +176,45 @@ func Server() {
 		code := GetCoockieCode(w, r, "code")
 		room.broadcastMessage("deaf_" + code)
 		http.Redirect(w, r, "/deaftest", http.StatusFound)
+	})
+	http.HandleFunc("/redirectAll", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
+		room.broadcastMessage("scattegorie" + code)
+		http.Redirect(w, r, "/win", http.StatusFound)
+	})
+	http.HandleFunc("/sendDataSC", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("sqlite3", "BDD.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+		userid := GetCoockie(w, r, "userId")
+		code := GetCoockieCode(w, r, "code")
+		roomID, _ := GetRoomByName(db, code)
+		room.nbPlayer = checkNbPlayer(db, roomID)
+
+		playersSC++
+		log.Println(room.nbPlayer)
+		if room.nbPlayer == 1 {
+			if playersSC == 1 {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					room.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				playersSC = 0
+			}
+		} else {
+			if playersSC == room.nbPlayer {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					room.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				playersSC = 0
+			}
+		}
+		ScattegoriesRound(w, r, room)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
 		players++

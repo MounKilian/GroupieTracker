@@ -267,14 +267,14 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 			for index, note := range Reponse {
 				id := note.ID
 				if currentId == id {
-					modifyCategoryField(ExtractSuffix(key), "True", 1, &Reponse[index])
+					modifyCategoryField(ExtractPrefix(key), "True", 1, &Reponse[index])
 					found = true
 				}
 			}
 			if found != true {
 				newNote := Note{ID: currentId}
 				Reponse = append(Reponse, newNote)
-				modifyCategoryField(ExtractSuffix(key), "True", 1, &Reponse[len(Reponse)-1])
+				modifyCategoryField(ExtractPrefix(key), "True", 1, &Reponse[len(Reponse)-1])
 			}
 			break
 		case "same":
@@ -286,14 +286,14 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 			for index, note := range Reponse {
 				id := note.ID
 				if currentId == id {
-					modifyCategoryField(ExtractSuffix(key), "Same", 1, &Reponse[index])
+					modifyCategoryField(ExtractPrefix(key), "Same", 1, &Reponse[index])
 					found = true
 				}
 			}
 			if found != true {
 				newNote := Note{ID: currentId}
 				Reponse = append(Reponse, newNote)
-				modifyCategoryField(ExtractSuffix(key), "Same", 1, &Reponse[len(Reponse)-1])
+				modifyCategoryField(ExtractPrefix(key), "Same", 1, &Reponse[len(Reponse)-1])
 			}
 			break
 		case "false":
@@ -305,14 +305,14 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 			for index, note := range Reponse {
 				id := note.ID
 				if currentId == id {
-					modifyCategoryField(ExtractSuffix(key), "False", 1, &Reponse[index])
+					modifyCategoryField(ExtractPrefix(key), "False", 1, &Reponse[index])
 					found = true
 				}
 			}
 			if found != true {
 				newNote := Note{ID: currentId}
 				Reponse = append(Reponse, newNote)
-				modifyCategoryField(ExtractSuffix(key), "False", 1, &Reponse[len(Reponse)-1])
+				modifyCategoryField(ExtractPrefix(key), "False", 1, &Reponse[len(Reponse)-1])
 			}
 			break
 		}

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Lack Luster Melodie</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="./static/gameStyle.css">
   </head>
   <body>
     <header>
       <div class="logo">
-          <img src="../static/img/logo.png" alt="Logo">
+        <a href="/landingPage"><img src="../static/img/logo.png" alt="Logo"></a>
       </div>
   </header>
     <div class="container">
       <p id="timer"></p>
       <div class="prompteur">
-      <p class="lyrics">{{ . }}</p>
+      <p class="lyrics">{{ .Music }}</p>
       </div>
       <form id="deaftest" method="post" action="/deaftestChecker">
         <input class="input" required name="music-name" type="text" value="" placeholder="Music name"/>
@@ -32,7 +35,7 @@
     }
     
     let timerElement = document.getElementById("timer");
-    let timeLeft = 60;
+    let timeLeft = parseInt("{{ .Time }}");
     let timerInterval = setInterval(function() {
         timerElement.textContent = `Time left: ${timeLeft} seconds`;
         timeLeft--;

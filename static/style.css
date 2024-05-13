@@ -235,6 +235,13 @@ body {
     transition: transform 0.3s ease;
 }
 
+#responseForm, #hostForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+}
+
 .join-container:hover, .host-container:hover {
     transform: scale(1.05);
 }
@@ -327,7 +334,7 @@ body {
     text-align: center;
 }
 
-.select {
+.select, .input {
     width: 60%;
     margin: 1vh;
     border: 2px solid #ffdd00;
@@ -413,12 +420,33 @@ body {
 	margin-top: 20px;
 }
 
+/* ************************WIN*********************** */
+
+th, td, tr  {
+    color: #f3e3ff;
+    border: 3px solid #ffdd00;  
+    background-color: #7b5eab;
+    border-radius: 10px;
+    padding: 2vh ;
+    text-align: center;
+  }
+
+table {
+    color: #f3e3ff;
+    border: 10px solid #59457a;
+    background-color: #7b5eab;
+    border-radius: 10px;
+    padding: 1vh;
+    padding-left: 10vh;  
+    padding-right: 10vh;
+    text-align: center;  
+}
 
 /* ************************RESPONSIVE*********************** */
 
 @media (max-width: 768px) {
-    .containerGauche,
-    .containerDroit {
+    .containerLeft,
+    .containerRight {
         width: 100%;
     }
     .container {

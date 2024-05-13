@@ -16,6 +16,7 @@ var questionsMap map[string][]Question
 var state = false
 var players = 0
 var playersBT = 0
+var playersSC = 0
 var last = 0
 var lastBT = 0
 
@@ -26,6 +27,7 @@ type Blindtest struct {
 	currentPlay  int
 	nbPlayer     int
 	finish       bool
+	Time         string
 }
 
 type Deaftest struct {
@@ -35,6 +37,7 @@ type Deaftest struct {
 	currentPlay  int
 	nbPlayer     int
 	finish       bool
+	Time         string
 }
 
 type Room struct {
@@ -47,6 +50,8 @@ type Room struct {
 	game           string
 	Time           string
 	nbrsMaxPlayers int
+	nbPlayer       int
+	finish         bool
 }
 
 var upgrader = websocket.Upgrader{
@@ -59,6 +64,7 @@ func NewRoom() *Room {
 		clients:    make(map[*websocket.Conn]bool),
 		register:   make(chan *websocket.Conn),
 		unregister: make(chan *websocket.Conn),
+		finish:     false,
 	}
 }
 
@@ -125,13 +131,12 @@ func Server() {
 		Scattegories(w, r, room)
 	})
 	http.HandleFunc("/scattegoriesChecker", func(w http.ResponseWriter, r *http.Request) {
+		room.broadcastMessage("refresh")
 		buttonValue := r.FormValue("button-value")
 		code := GetCoockieCode(w, r, "code")
 		userid := GetCoockie(w, r, "userId")
-		log.Println("ok")
 		questions := questionsMap[code]
 		if strconv.Itoa(userid) == buttonValue {
-			log.Println("ok")
 			room.broadcastMessage("end_" + code + strconv.Itoa(userid))
 			response := ScattegoriesForm(w, r)
 			questions = append(questions, response)
@@ -167,6 +172,45 @@ func Server() {
 		code := GetCoockieCode(w, r, "code")
 		room.broadcastMessage("deaf_" + code)
 		http.Redirect(w, r, "/deaftest", http.StatusFound)
+	})
+	http.HandleFunc("/redirectAll", func(w http.ResponseWriter, r *http.Request) {
+		code := GetCoockieCode(w, r, "code")
+		room.broadcastMessage("scattegorie" + code)
+		http.Redirect(w, r, "/win", http.StatusFound)
+	})
+	http.HandleFunc("/sendDataSC", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("sqlite3", "BDD.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+		userid := GetCoockie(w, r, "userId")
+		code := GetCoockieCode(w, r, "code")
+		roomID, _ := GetRoomByName(db, code)
+		room.nbPlayer = checkNbPlayer(db, roomID)
+
+		playersSC++
+		log.Println(room.nbPlayer)
+		if room.nbPlayer == 1 {
+			if playersSC == 1 {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					room.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				playersSC = 0
+			}
+		} else {
+			if playersSC == room.nbPlayer {
+				roomCreator := GetCrteatedPlayer(db, roomID)
+				if roomCreator == userid {
+					room.finish = true
+				}
+				room.broadcastMessage(strconv.Itoa(roomCreator))
+				playersSC = 0
+			}
+		}
+		ScattegoriesRound(w, r, room)
 	})
 	http.HandleFunc("/deaftest", func(w http.ResponseWriter, r *http.Request) {
 		players++
@@ -235,17 +279,24 @@ func Server() {
 				log.Fatal(err)
 			}
 			room.Time = r.FormValue("responseTime")
-			log.Println(room.Time)
 			room.Letter = selectRandomLetter()
 			room.broadcastMessage("data_" + code)
 			http.Redirect(w, r, "/scattegories", http.StatusFound)
 		} else if room.game == "blindTest" {
+			if err := r.ParseForm(); err != nil {
+				log.Fatal(err)
+			}
+			Blindtest.Time = r.FormValue("responseTime")
 			Blindtest.gender, Blindtest.nbSong = WaitingFormBT(w, r)
 			Blindtest.currentPlay = 0
 			Blindtest.nbPlayer = nbrsUsers
 			Blindtest.currentBtest = BlindtestManager(Blindtest.gender)
 			room.broadcastMessage("blind_" + code)
 		} else if room.game == "deafTest" {
+			if err := r.ParseForm(); err != nil {
+				log.Fatal(err)
+			}
+			Deaftest.Time = r.FormValue("responseTime")
 			Deaftest.gender, Deaftest.nbSong = WaitingForm(w, r)
 			Deaftest.currentPlay = 0
 			Deaftest.nbPlayer = nbrsUsers

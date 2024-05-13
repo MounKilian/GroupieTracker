@@ -1,43 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Groupie caca</title>
-	<link rel="stylesheet" type="text/css" href="/static/style.css">
+    <title>Lack Luster Melodie</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-    <h1>Code de jeu : {{.Code}}</h1>
-        {{range $val := .Pseudo}}
-            <p value="{{$val}}">{{$val}}</p><br>
-        {{end}}
-	<div id="player">
-		<h1>Music Player</h1>
-        <form id="waiting" method="post" action="/startPlaying">
-            <select name="gender" id="music-style" required>
-                <option value="normal">Basique</option>
-                <option value="pop">Pop</option>
-                <option value="us-rap">Rap US</option>
-                <option value="rock">Rock</option>
-            </select>
-            <br>
-            <label for="num-songs">Number of songs:</label>
-            <input required name="nb-song" type="number" id="num-songs" min="1" max="10">
-            <br>
-        </form>
-        <button type="submit" form="waiting" value="Submit">Play</button>
-	</div>
-
-	<script>
-        let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
-
-        ws.onopen = function(){
-            console.log("Websocket open")
-        }
-
-        ws.onmessage = function(event){
-            if (event.data == "newUser"){
-                window.location.href = "/waiting"
-            }
-        }
-    </script>
+<header>
+    <div class="logo">  
+        <a href="/landingPage"><img src="../static/img/logo.png" alt="Logo"></a>
+    </div>
+</header>
+<div class="container">
+    <div class="containerLeft">
+        <div class="animateur">
+            <img src="static/img/animateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerRight">
+        <div class="screen-container">
+            <div class="screen-container-left">
+                <br>
+                <div class="code-container">
+                    <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
+                </div>
+                <br>
+                {{range $val := .Pseudo}}
+                <div class="pseudo-container">
+                <p value="{{$val}}">{{$val}}</p>
+                </div>
+                {{end}}
+            </div>
+            <div class="screen-container-droit">
+            <div id="player">
+                <h1>Music Player</h1>
+                <form id="waiting" method="post" action="/startPlaying">
+                    <label for="num-songs">Music genger</label><br>
+                    <select class="select" name="gender" id="music-style" required>
+                        <option value="normal">Basique</option> 
+                        <option value="pop">Pop</option> 
+                        <option value="us-rap">Rap US</option> 
+                        <option value="rock">Rock</option>
+                    </select>
+                    <br>
+                    <label for="responseTime">Minuteur</label>
+                    <br>
+                    <select class="select" name="responseTime" id="responseTime">
+                        <option value="15">15 secondes</option>
+                        <option value="30">30 secondes</option>
+                        <option value="45">45 secondes</option>
+                        <option value="60" selected>60 secondes</option>
+                        <option value="75">75 secondes</option>
+                        <option value="90">90 secondes</option>
+                        <option value="105">105 secondes</option>
+                        <option value="120">120 secondes</option>
+                    </select>
+                    <br>
+                    <label for="num-songs">Number of songs:</label>
+                    <input class="select" required name="nb-song" type="number" id="num-songs" min="1" max="10" placeholder="10">
+                </form>
+                <button class="button" type="submit" form="waiting" value="Submit">Play</button>
+                <br>
+                <br>
+            </div>
+        </div>
+        </div>
+        <div class="canape">
+            <img src="static/img/canape.png" alt="CanapÃ©">
+        </div>
+        <div class="responsiveAnimateur">
+            <img src="static/img/responsiveAnimateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerMilieu">
+    </div>
+</div>
 </body>
+<script>
+    let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
+    ws.onopen = function(){
+        console.log("Websocket open")
+    }
+    ws.onmessage = function(event){
+        if (event.data == "newUser"){
+            window.location.href = "/waiting"
+        }
+    }
+    document.getElementById("codeButton").addEventListener("click", function() {
+    var codeText = this.textContent || this.innerText;
+    navigator.clipboard.writeText(codeText).then(function() {
+        console.log("Code copied to clipboard");
+    }, function(err) {
+        console.error("Failed to copy code: ", err);
+    });
+    });
+</script>
 </html>

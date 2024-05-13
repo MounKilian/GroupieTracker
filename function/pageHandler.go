@@ -13,6 +13,11 @@ type Info struct {
 	Pseudo []string
 }
 
+type Data struct {
+	Music string
+	Time  string
+}
+
 var game string
 var infos Info
 var refresh = true
@@ -53,11 +58,14 @@ func ScattegoriesVerification(w http.ResponseWriter, r *http.Request, data []Que
 
 // Deaftest pages
 func DeafTest(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
+	var data Data
+	data.Music = Deaftest.currentMusic.lyrics
+	data.Time = Deaftest.Time
 	template, err := template.ParseFiles("./pages/deaftest/deaftest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, Deaftest.currentMusic.lyrics)
+	template.Execute(w, data)
 }
 
 func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
@@ -82,6 +90,28 @@ func DeafTestRound(w http.ResponseWriter, r *http.Request, Deaftest *Deaftest) {
 			log.Fatal(err)
 		}
 		template.Execute(w, score)
+	}
+}
+
+func ScattegoriesRound(w http.ResponseWriter, r *http.Request, room *Room) {
+	db, err := sql.Open("sqlite3", "BDD.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	if room.finish == true {
+		room.finish = false
+		template, err := template.ParseFiles("./pages/scattegories/scattegorieroundCreator.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, nil)
+	} else {
+		template, err := template.ParseFiles("./pages/scattegories/scattegorieround.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		template.Execute(w, nil)
 	}
 }
 
@@ -238,6 +268,7 @@ func Win(w http.ResponseWriter, r *http.Request) {
 	userId := GetCoockie(w, r, "userId")
 	currentRoom := GetCurrentRoomUser(db, userId)
 	playersScore := GetUsersScoreInRoom(db, currentRoom)
+	log.Println(playersScore)
 
 	template, err := template.ParseFiles("./pages/win.html")
 	if err != nil {
@@ -247,9 +278,12 @@ func Win(w http.ResponseWriter, r *http.Request) {
 }
 
 func BlindTest(w http.ResponseWriter, r *http.Request, Blindtest *Blindtest) {
+	var data Data
+	data.Music = Blindtest.currentBtest.PreviewURL
+	data.Time = Blindtest.Time
 	template, err := template.ParseFiles("./pages/blindtest/blindtest.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	template.Execute(w, Blindtest.currentBtest.PreviewURL)
+	template.Execute(w, data)
 }

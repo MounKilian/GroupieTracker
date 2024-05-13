@@ -13,11 +13,8 @@
       </div>
   </header>
     <div class="container">
-      <div class="score">
-        <p> score : {{.}}</p>
-      </div>
-      <form id="blindtest" method="post" action="/sendDataBT">
-        <button class="button" id="button" type="submit" form="blindtest" value="Submit">Submit</button>
+      <form id="deaftest" method="post" action="/redirectAll">
+        <button class="button" id="button" type="submit" form="deaftest" value="Submit">Submit</button>
       </form>
     </div>
   </body>
@@ -27,10 +24,10 @@
         console.log("Websocket open")
     }
     ws.onmessage = function(event){
-      if (event.data.startsWith("blind")){
+      if (event.data.startsWith("scattegorie")){
         let code = getCookie("code")
         if (event.data.includes(code)){
-            window.location.href = "/blindtest"
+            window.location.href = "/win"
         }
       }
     }

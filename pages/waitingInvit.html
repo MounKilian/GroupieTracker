@@ -1,16 +1,46 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Groupie caca</title>
+        <title>Lack Luster Melodie</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./static/style.css">
     </head>
     <body>
-        <h1>Code de jeu : {{.Code}}</h1>
-        {{range $val := .Pseudo}}
-            <p value="{{$val}}">{{$val}}</p><br>
-        {{end}}
+    <header>
+        <div class="logo">
+            <a href="/landingPage"><img src="../static/img/logo.png" alt="Logo"></a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="containerLeft">
+            <div class="animateur">
+                <img src="static/img/animateur.png" alt="Animateur">
+            </div>
+        </div>
+        <div class="containerRight">
+            <div class="screen-container">
+                <div class="screen-container-left">
+                    <br>
+                    <div class="code-container">
+                        <button class="button" id="codeButton" type="button" onclick="" value="Submit">{{.Code}}</button>
+                    </div>
+                    <br>
+                    {{range $val := .Pseudo}}
+                    <div class="pseudo-container">
+                    <p value="{{$val}}">{{$val}}</p>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+            <div class="canape">
+                <img src="static/img/canape.png" alt="Canapé">
+            </div>
+            <div class="responsiveAnimateur">
+                <img src="static/img/responsiveAnimateur.png" alt="Animateur">
+            </div>
+        </div>
+    </div>
     </body>
     <script>
         let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")

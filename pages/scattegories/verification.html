@@ -5,14 +5,9 @@
 			body {
 				font-family: Arial, sans-serif;
 			}
-			.theme{
-				margin-top: 20px;
-				margin-left: 50%;
+			.question {
+				margin-bottom: 20px;
 			}
-			.question-container {
-      			display: inline-block;
-      			margin: 20px;
-    		}
 			.button {
 				background-color: #4CAF50;
 				color: #fff;
@@ -35,46 +30,35 @@
 			.button-false:hover {
 				background-color: #8e3e3e;
 			}
-			.button-same {
-				background-color: #4c77af;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-			}
-			.button-same:hover {
-				background-color: #3e698e;
-			}
-			.button-next {
-				background-color: #000000;
-				color: #fff;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				margin-left: auto;
-				margin-right: auto;
-			}
-			.button-next:hover {
-				background-color: #1e1e1e;
-			}
 		</style>
 	</head>
 	<body>
-		<h1 class="theme" style="display: block;"> Artist </h1>
-		<h1 class="theme" style="display: none;"> Album </h1>
-		<h1 class="theme" style="display: none;"> Groupe de music </h1>
-		<h1 class="theme" style="display: none;"> Instrument de music </h1>
-		<h1 class="theme" style="display: none;"> Featuring </h1>
-
-		{{template "reponse-container" .}}
-
-		<button style="display: block;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(0)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(1)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(2)">Next</button>
-		<button style="display: none;" class="button-next" name="featuring" value="Next" onclick="nextQuestion(3)">Next</button>
-		<button style="display: none;" class="button-next" type="submit" form="scattegories-verification" value="Submit">Submit</button>
+		<h1>{{.Username}}</h1>
+			<div class="question" id="question-0">
+				<p>Artist: {{.Artist}}</p>
+				<button class="button" name="artist" value="true" onclick="nextQuestion(0)">Vrai</button>
+				<button class="button-false" name="artist" value="false" onclick="nextQuestion(0)">Faux</button>
+			</div>
+			<div class="question" id="question-1" style="display: none;">
+				<p>Album: {{.Album}}</p>
+				<button class="button" name="album" value="true" onclick="nextQuestion(1)">Vrai</button>
+				<button class="button-false" name="album" value="false" onclick="nextQuestion(1)">Faux</button>
+			</div>
+			<div class="question" id="question-2" style="display: none;">
+				<p>Groupe de musique: {{.GroupeDeMusic}}</p>
+				<button class="button" name="groupe" value="true" onclick="nextQuestion(2)">Vrai</button>
+				<button class="button-false" name="groupe" value="false" onclick="nextQuestion(2)">Faux</button>
+			</div>
+			<div class="question" id="question-3" style="display: none;">
+				<p>Instrument de musique: {{.InstrumentDeMusic}}</p>
+				<button class="button" name="instrument" value="true" onclick="nextQuestion(3)">Vrai</button>
+				<button class="button-false" name="instrument" value="false" onclick="nextQuestion(3)">Faux</button>
+			</div>
+			<div class="question" id="question-4" style="display: none;">
+				<p>Featuring: {{.Featuring}}</p>
+				<button class="button" name="featuring" value="true" onclick="nextQuestion(4)">Vrai</button>
+				<button class="button-false" name="featuring" value="false" onclick="nextQuestion(4)">Faux</button>
+			</div>
 		<script>
 			let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")
 

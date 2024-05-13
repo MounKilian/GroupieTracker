@@ -180,7 +180,7 @@ func Server() {
 	http.HandleFunc("/redirectAll", func(w http.ResponseWriter, r *http.Request) {
 		code := GetCoockieCode(w, r, "code")
 		room.broadcastMessage("scattegorie" + code)
-		http.Redirect(w, r, "/win", http.StatusFound)
+		http.Redirect(w, r, "/verificationChecker", http.StatusFound)
 	})
 	http.HandleFunc("/sendDataSC", func(w http.ResponseWriter, r *http.Request) {
 		db, err := sql.Open("sqlite3", "BDD.db")

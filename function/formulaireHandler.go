@@ -65,17 +65,33 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 			passwordEncrypt := Encrypt(password)
 			valueCreate := [3]string{pseudo, email, passwordEncrypt}
 
-			if verifyPassword != password && VerifyPassword(password) {
+			if verifyPassword != password {
 				log.Println("ERROR : Incorrect password")
+				errorMessage := "Different password"
+				Home(w, r, errorMessage)
+			} else if len(password) < 12 {
+				log.Println("ERROR : Incorrect password")
+				errorMessage := "Password is too short, 12 characters minimum"
+				Home(w, r, errorMessage)
+			} else if !VerifyPassword(password) {
+				log.Println("ERROR : Incorrect password")
+				errorMessage := "Your password must contain: lowercase, uppercase, special characters and number"
+				Home(w, r, errorMessage)
+			} else if !EmailValid(email) {
+				log.Println("ERROR : Incorrect email")
+				errorMessage := "The email entered is invalid"
+				Home(w, r, errorMessage)
 			} else {
 				createUser(db, valueCreate)
 				valueConnect := [2]string{pseudo, passwordEncrypt}
 				user = connectUser(db, valueConnect)
 				if user.pseudo == "" {
 					log.Println("ERROR : Wrong connection information")
+					errorMessage := "Pseudo or email already used"
+					Home(w, r, errorMessage)
 				} else {
 					SetCookie(w, user)
-					http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
+					http.Redirect(w, r, "/landingPage", http.StatusFound)
 				}
 			}
 		} else if key == "connect-log" {
@@ -87,7 +103,8 @@ func Formulaire(w http.ResponseWriter, r *http.Request) {
 			user = connectUser(db, valueConnect)
 			if user.pseudo == "" {
 				log.Println("ERROR : Wrong connection information")
-				http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
+				errorMessage := "Wrong connection information"
+				Home(w, r, errorMessage)
 			} else {
 				SetCookie(w, user)
 				http.Redirect(w, r, "/landingPage", http.StatusFound)

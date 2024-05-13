@@ -241,7 +241,7 @@ func ScattegoriesVerificationChecker(w http.ResponseWriter, r *http.Request) {
 			currentRoom := GetCurrentRoomUser(db, userId)
 			UpdatePlayerScore(db, currentRoom, userId, 3)
 			break
-		case "same":
+		case "Same":
 			userId, err := strconv.Atoi(ExtractSuffix(key))
 			if err != nil {
 				log.Fatal(err)

@@ -53,7 +53,7 @@ func createUser(db *sql.DB, value [3]string) {
 // Return user information as User
 func connectUser(db *sql.DB, value [2]string) User {
 	var u User
-	db.QueryRow("SELECT * FROM `USER` WHERE pseudo = ? OR email = ? AND password = ?", value[0], value[0], value[1]).Scan(&u.id, &u.pseudo, &u.email, &u.password)
+	db.QueryRow("SELECT * FROM `USER` WHERE pseudo = ? AND password = ? OR email = ? AND password = ?", value[0], value[1], value[0], value[1]).Scan(&u.id, &u.pseudo, &u.email, &u.password)
 	return u
 }
 

@@ -10,6 +10,13 @@ header {
     box-shadow: 0 0 10px rgba(0,0,0,.2);
 
 }
+
+.error-message{
+    color: red;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
 .logo img {
     max-width: 8%;
     height: auto;

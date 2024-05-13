@@ -148,12 +148,8 @@ func Server() {
 		}
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
-		userId := GetCoockie(w, r, "userId")
 		code := GetCoockieCode(w, r, "code")
 		questions := questionsMap[code]
-		user := strconv.Itoa(userId)
-		log.Println(user)
-		log.Println(questions)
 		ScattegoriesVerification(w, r, questions)
 	})
 	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {

@@ -268,6 +268,7 @@ func Win(w http.ResponseWriter, r *http.Request) {
 	userId := GetCoockie(w, r, "userId")
 	currentRoom := GetCurrentRoomUser(db, userId)
 	playersScore := GetUsersScoreInRoom(db, currentRoom)
+	log.Println(playersScore)
 
 	template, err := template.ParseFiles("./pages/win.html")
 	if err != nil {

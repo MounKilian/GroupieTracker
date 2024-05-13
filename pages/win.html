@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Groupie caca</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-	<table>
-		<tr>
-			<th>User</th>
-			<th>Score</th>
-		</tr>
-		{{range $index, $element := .}}
-		<tr>
-			<td>{{$element.User}}</td>
-			<td>{{$element.Score}}</td>
-		</tr>
-		{{end}}
-	</table>
+<header>
+    <div class="logo">
+        <a href="/landingPage"><img src="../static/img/logo.png" alt="Logo"></a>
+    </div>
+</header>
+<div class="container">
+    <div class="containerLeft">
+        <div class="animateur">
+            <img src="../static/img/animateur.png" alt="Animateur">
+        </div>
+    </div>
+    <div class="containerRight">
+        <div class="screen-container">
+            <table>
+				<tr>
+					<th>User</th>
+					<th>Score</th>
+				</tr>
+				{{range $index, $element := .}}
+				<tr>
+					<td>{{$element.User}}</td>
+					<td>{{$element.Score}}</td>
+				</tr>
+				{{end}}
+			</table>
+        </div>
+        <div class="canape">
+            <img src="../static/img/canape.png" alt="Canapé">
+        </div>
+        <div class="responsiveAnimateur">
+            <img src="../static/img/responsiveAnimateur.png" alt="Animateur">
+        </div>
+    </div>
+</div>
 </body>
 <script>
 	let ws = new WebSocket("ws://" + window.location.hostname + ":8080/ws")

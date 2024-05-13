@@ -148,12 +148,8 @@ func Server() {
 		}
 	})
 	http.HandleFunc("/verification", func(w http.ResponseWriter, r *http.Request) {
-		userId := GetCoockie(w, r, "userId")
 		code := GetCoockieCode(w, r, "code")
 		questions := questionsMap[code]
-		user := strconv.Itoa(userId)
-		log.Println(user)
-		log.Println(questions)
 		ScattegoriesVerification(w, r, questions)
 	})
 	http.HandleFunc("/verificationChecker", func(w http.ResponseWriter, r *http.Request) {
@@ -180,7 +176,7 @@ func Server() {
 	http.HandleFunc("/redirectAll", func(w http.ResponseWriter, r *http.Request) {
 		code := GetCoockieCode(w, r, "code")
 		room.broadcastMessage("scattegorie" + code)
-		http.Redirect(w, r, "/verificationChecker", http.StatusFound)
+		http.Redirect(w, r, "/win", http.StatusFound)
 	})
 	http.HandleFunc("/sendDataSC", func(w http.ResponseWriter, r *http.Request) {
 		db, err := sql.Open("sqlite3", "BDD.db")
